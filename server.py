@@ -1049,6 +1049,10 @@ def webhook():
     text = msg.get("text", "")
     from_id = msg.get("from", {}).get("id")
 
+    if text == "/start":
+        tg_send(from_id, "👋 Привіт! Натисни кнопку «Меню» внизу зліва ↙️ щоб відкрити додаток")
+        return "ok"
+
     if from_id not in ADMIN_IDS:
         return "ok"
 
