@@ -780,8 +780,8 @@ input[type=range]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;
 
     <!-- PUBLIC WALL -->
     <div class="page" id="page-wall">
-      <div class="sh"><span class="sh-icon">📢</span><span class="sh-title">ПУБЛІЧНА СТІНКА</span><span class="sh-pill">ALL</span></div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:14px;line-height:1.6">Питання та відповіді, які адмін зробив публічними</div>
+      <div class="sh"><span class="sh-icon">📢</span><span class="sh-title" id="sh-wall">ПУБЛІЧНА СТІНКА</span><span class="sh-pill">ALL</span></div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:14px;line-height:1.6" id="wall-sub">Питання та відповіді, які адмін зробив публічними</div>
       <div id="wall-list"></div>
       <div class="pager" id="wall-pager" style="display:none">
         <button class="pager-btn" id="wall-prev" onclick="wallPage(-1)">← Prev</button>
@@ -873,14 +873,6 @@ input[type=range]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;
       <div style="margin-top:16px;margin-bottom:16px">
         <div class="anon-proof-title" id="faq-qa-title" style="margin-bottom:12px">❓ ЧАСТІ ПИТАННЯ</div>
         <div style="display:flex;flex-direction:column;gap:8px">
-          <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:14px 16px">
-            <div style="font-size:13px;font-weight:600;color:var(--acc1);margin-bottom:6px" id="faq-q1">Чи може адмін дізнатись, що це я написав?</div>
-            <div style="font-size:13px;color:var(--text);line-height:1.5" id="faq-a1">Ні. Адмін бачить лише хеш — набір символів без жодного зв'язку з твоїм обліковим записом. Навіть якщо ти напишеш 10 питань — адмін не знатиме, що вони від однієї людини.</div>
-          </div>
-          <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:14px 16px">
-            <div style="font-size:13px;font-weight:600;color:var(--acc1);margin-bottom:6px" id="faq-q2">Як відповідь знаходить мене?</div>
-            <div style="font-size:13px;color:var(--text);line-height:1.5" id="faq-a2">Твій Telegram ID зберігається в окремій захищеній таблиці. Сервер автоматично надсилає відповідь через бота. Адмін не бачить і не вводить нічого пов'язаного з тобою.</div>
-          </div>
           <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:14px 16px">
             <div style="font-size:13px;font-weight:600;color:var(--acc1);margin-bottom:6px" id="faq-q3">Що таке BLAKE2b?</div>
             <div style="font-size:13px;color:var(--text);line-height:1.5" id="faq-a3">Це криптографічна хеш-функція — як одностороннє шифрування. З хешу неможливо отримати оригінальні дані. Використовується в банківських системах і блокчейні.</div>
@@ -1003,7 +995,7 @@ input[type=range]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;
     <div class="bot-nav-inner">
       <button class="bnnb on" id="bnnb-ask" onclick="goPage('ask')"><span class="bnnb-ic">❓</span><span class="bnnb-lb" id="nav-ask">Ask</span></button>
       <button class="bnnb" id="bnnb-my" onclick="goPage('my')"><span class="bnnb-ic">💬</span><span class="bnnb-lb" id="nav-my">Answers</span><span class="bnnb-badge" id="bdg"></span></button>
-      <button class="bnnb" id="bnnb-wall" onclick="goPage('wall')"><span class="bnnb-ic">📢</span><span class="bnnb-lb">Wall</span></button>
+      <button class="bnnb" id="bnnb-wall" onclick="goPage('wall')"><span class="bnnb-ic">📢</span><span class="bnnb-lb" id="nav-wall">Wall</span></button>
       <button class="bnnb" id="bnnb-adm" onclick="goPage('adm')"><span class="bnnb-ic">🔒</span><span class="bnnb-lb" id="nav-adm">FAQ</span></button>
       <button class="bnnb" id="bnnb-set" onclick="goPage('set')"><span class="bnnb-ic">⚙️</span><span class="bnnb-lb" id="nav-set">Settings</span></button>
     </div>
@@ -1114,7 +1106,8 @@ uk:{
   'sett-autodraft':'Авто-чернетка','sett-autodraft-ds':'Зберігати незавершені питання',
   'sett-blur':'Розмиття','sett-blur-ds':'Ховати при мінімізації',
   'sett-hist':'Зберігати історію','sett-hist-ds':'Локально на пристрої',
-  'nav-ask':'Питання','nav-my':'Відповіді','nav-how':'Анонімність','nav-adm':'FAQ','nav-set':'Налаш.',
+  'sh-wall':'ПУБЛІЧНА СТІНКА','wall-sub':'Питання та відповіді, які адмін зробив публічними',
+  'nav-ask':'Питання','nav-my':'Відповіді','nav-wall':'Стінка','nav-how':'Анонімність','nav-adm':'FAQ','nav-set':'Налаш.',
   'prof-anon':'АНОНІМНО','ver-anon':'АНОНІМНО',
   'chart-title':'АКТИВНІСТЬ 24Г',
   'how-hero-title':'100% Анонімно','how-hero-sub':'Ваша особистість математично захищена.',
@@ -1146,10 +1139,6 @@ uk:{
   'faq-g5k':'Твої дані передаються третім','faq-g5v':'✗ НІКОЛИ',
   'faq-g6k':'Хеш можна розшифрувати','faq-g6v':'✗ НЕМОЖЛИВО',
   'faq-qa-title':'❓ ЧАСТІ ПИТАННЯ',
-  'faq-q1':'Чи може адмін дізнатись, що це я написав?',
-  'faq-a1':'Ні. Адмін бачить лише хеш — набір символів без жодного зв\'язку з твоїм обліковим записом. Навіть якщо ти напишеш 10 питань — адмін не знатиме, що вони від однієї людини.',
-  'faq-q2':'Як відповідь знаходить мене?',
-  'faq-a2':'Твій Telegram ID зберігається в окремій захищеній таблиці. Сервер автоматично надсилає відповідь через бота. Адмін не бачить і не вводить нічого пов\'язаного з тобою.',
   'faq-q3':'Що таке BLAKE2b?',
   'faq-a3':'Це криптографічна хеш-функція — як одностороннє шифрування. З хешу неможливо отримати оригінальні дані. Використовується в банківських системах і блокчейні.',
   'faq-q4':'Чи можу я редагувати питання після відправки?',
@@ -1192,7 +1181,8 @@ en:{
   'sett-autodraft':'Auto-draft','sett-autodraft-ds':'Auto-save unfinished questions',
   'sett-blur':'Blur on switch','sett-blur-ds':'Hide when backgrounded',
   'sett-hist':'Save history','sett-hist-ds':'Store locally',
-  'nav-ask':'Ask','nav-my':'Answers','nav-how':'Privacy','nav-adm':'FAQ','nav-set':'Settings',
+  'sh-wall':'PUBLIC WALL','wall-sub':'Questions and answers made public by admin',
+  'nav-ask':'Ask','nav-my':'Answers','nav-wall':'Wall','nav-how':'Privacy','nav-adm':'FAQ','nav-set':'Settings',
   'prof-anon':'ANONYMOUS','ver-anon':'ANONYMOUS',
   'chart-title':'24H ACTIVITY',
   'how-hero-title':'100% Anonymous','how-hero-sub':'Your identity is mathematically protected.',
@@ -1224,10 +1214,6 @@ en:{
   'faq-g5k':'Your data shared with others','faq-g5v':'✗ NEVER',
   'faq-g6k':'Hash can be decrypted','faq-g6v':'✗ IMPOSSIBLE',
   'faq-qa-title':'❓ FREQUENTLY ASKED',
-  'faq-q1':'Can admin find out it was me who wrote?',
-  'faq-a1':'No. Admin only sees a hash — a string of characters with no connection to your account. Even if you send 10 questions, admin won\'t know they\'re from the same person.',
-  'faq-q2':'How does the reply find me?',
-  'faq-a2':'Your Telegram ID is stored in a separate secure table. The server automatically sends the reply via bot. Admin doesn\'t see or input anything related to you.',
   'faq-q3':'What is BLAKE2b?',
   'faq-a3':'A cryptographic hash function — like one-way encryption. It\'s impossible to recover the original data from a hash. Used in banking systems and blockchain.',
   'faq-q4':'Can I edit my question after sending?',
@@ -1270,7 +1256,8 @@ ru:{
   'sett-autodraft':'Авто-черновик','sett-autodraft-ds':'Сохранять незавершённые',
   'sett-blur':'Размытие','sett-blur-ds':'Скрывать при сворачивании',
   'sett-hist':'История','sett-hist-ds':'Хранить локально',
-  'nav-ask':'Вопросы','nav-my':'Ответы','nav-how':'Анонимность','nav-adm':'FAQ','nav-set':'Настр.',
+  'sh-wall':'ПУБЛИЧНАЯ СТЕНА','wall-sub':'Вопросы и ответы, которые админ сделал публичными',
+  'nav-ask':'Вопросы','nav-my':'Ответы','nav-wall':'Стена','nav-how':'Анонимность','nav-adm':'FAQ','nav-set':'Настр.',
   'prof-anon':'АНОНИМНО','ver-anon':'АНОНИМНО',
   'chart-title':'АКТИВНОСТЬ 24Ч',
   'how-hero-title':'100% Анонимно','how-hero-sub':'Ваша личность математически защищена.',
@@ -1302,10 +1289,6 @@ ru:{
   'faq-g5k':'Данные передаются третьим','faq-g5v':'✗ НИКОГДА',
   'faq-g6k':'Хеш можно расшифровать','faq-g6v':'✗ НЕВОЗМОЖНО',
   'faq-qa-title':'❓ ЧАСТЫЕ ВОПРОСЫ',
-  'faq-q1':'Может ли админ узнать, что это я написал?',
-  'faq-a1':'Нет. Админ видит только хеш — строку символов без связи с вашим аккаунтом. Даже если написать 10 вопросов — админ не узнает, что они от одного человека.',
-  'faq-q2':'Как ответ находит меня?',
-  'faq-a2':'Ваш Telegram ID хранится в отдельной защищённой таблице. Сервер автоматически отправляет ответ через бота. Админ ничего связанного с вами не видит и не вводит.',
   'faq-q3':'Что такое BLAKE2b?',
   'faq-a3':'Криптографическая хеш-функция — как одностороннее шифрование. Из хеша невозможно восстановить исходные данные. Используется в банковских системах и блокчейне.',
   'faq-q4':'Можно ли редактировать вопрос после отправки?',
@@ -1328,7 +1311,8 @@ function tr(k){const d=TR[lang]||TR.en;return d[k]!==undefined?d[k]:TR.en[k]||k}
 
 // ─ Apply translations ─
 function applyTranslations(){
-  const keys=['w-sub','wf1','wf2','wf3','sh-ask','sh-pill','sh-my','sh-how','sh-adm','sh-set',
+  const keys=['w-sub','wf1','wf2','wf3','sh-ask','sh-pill','sh-my','sh-how','sh-adm','sh-set','sh-wall',
+    'wall-sub',
     'lbl-cat','lbl-tags','cat-other','cat-pers','cat-phil','cat-hum','cat-adv',
     'sent-title','sent-sub','btn-another','btn-tomy','lbl-pass','btn-alog',
     'a1l','a2l','a3l','a4l','hdr-online',
@@ -1336,7 +1320,7 @@ function applyTranslations(){
     'lbl-low','lbl-hi','sett-particles','sett-particles-ds','sett-breathe','sett-breathe-ds',
     'sett-scanlines','sett-scanlines-ds','sett-haptic','sett-haptic-ds',
     'sett-autodraft','sett-autodraft-ds','sett-blur','sett-blur-ds','sett-hist','sett-hist-ds',
-    'nav-ask','nav-my','nav-how','nav-adm','nav-set','prof-anon','ver-anon','chart-title',
+    'nav-ask','nav-my','nav-wall','nav-how','nav-adm','nav-set','prof-anon','ver-anon','chart-title',
     'how-hero-title','how-hero-sub','proof-title','hash-what',
     'apr1k','apr2k','apr3k','apr4k','apr5k','draft-lbl',
     'psych-badge','psych-text','psych-anon-badge','psych-link',
@@ -1347,7 +1331,7 @@ function applyTranslations(){
     'faq-g1k','faq-g1v','faq-g2k','faq-g2v','faq-g3k','faq-g3v',
     'faq-g4k','faq-g4v','faq-g5k','faq-g5v','faq-g6k','faq-g6v',
     'faq-qa-title',
-    'faq-q1','faq-a1','faq-q2','faq-a2','faq-q3','faq-a3','faq-q4','faq-a4'];
+    'faq-q3','faq-a3','faq-q4','faq-a4'];
   keys.forEach(k=>{const el=document.getElementById(k);if(el)el.textContent=tr(k)});
   document.getElementById('qt').placeholder=tr('qt-ph');
   document.getElementById('tag-input').placeholder=tr('tag-ph');
