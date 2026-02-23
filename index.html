@@ -1,0 +1,1915 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<title>Silence-net: AnonimQ</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@200;300;400;600;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --acc1:#00e5ff;--acc2:#7c4de8;
+  --glow1:rgba(0,229,255,.32);--glow2:rgba(124,77,232,.22);
+  --bg:#040610;--glass:rgba(255,255,255,.045);--glass2:rgba(255,255,255,.08);
+  --border:rgba(255,255,255,.09);--border-acc:rgba(0,229,255,.26);
+  --text:#dce8ff;--muted:rgba(180,200,255,.44);
+  --danger:#ff4d6d;--success:#00e676;--warn:#ffd166;
+  --font-d:'Exo 2',sans-serif;--font-m:'Share Tech Mono',monospace;--font-b:'Rajdhani',sans-serif;
+}
+[data-theme="cyan"]{--acc1:#00e5ff;--acc2:#7c4de8;--glow1:rgba(0,229,255,.32);--glow2:rgba(124,77,232,.22);--border-acc:rgba(0,229,255,.26)}
+[data-theme="violet"]{--acc1:#b56bff;--acc2:#ff6bdb;--glow1:rgba(181,107,255,.32);--glow2:rgba(255,107,219,.22);--border-acc:rgba(181,107,255,.26)}
+[data-theme="green"]{--acc1:#00ff9d;--acc2:#00c3ff;--glow1:rgba(0,255,157,.32);--glow2:rgba(0,195,255,.22);--border-acc:rgba(0,255,157,.26)}
+[data-theme="gold"]{--acc1:#ffd166;--acc2:#ff9f4a;--glow1:rgba(255,209,102,.32);--glow2:rgba(255,159,74,.22);--border-acc:rgba(255,209,102,.26)}
+[data-theme="red"]{--acc1:#ff4d6d;--acc2:#ff8c42;--glow1:rgba(255,77,109,.32);--glow2:rgba(255,140,66,.22);--border-acc:rgba(255,77,109,.26)}
+
+/* Dialog overlay */
+.dialog-ov{position:fixed;top:0;left:0;right:0;bottom:0;z-index:400;
+  background:rgba(2,4,12,.88);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
+  display:none;flex-direction:column;overflow:hidden}
+.dialog-ov.on{display:flex;animation:fadeOv .22s ease}
+.dialog-hdr{display:flex;align-items:center;gap:10px;padding:14px 14px 10px;
+  border-bottom:1px solid var(--border);flex-shrink:0}
+.dialog-back{font-size:20px;cursor:pointer;padding:4px 6px;border-radius:8px;
+  background:var(--glass);border:1px solid var(--border);transition:all .18s;flex-shrink:0}
+.dialog-back:hover{border-color:var(--border-acc);color:var(--acc1)}
+.dialog-uid{font-family:var(--font-m);font-size:10px;color:var(--acc1);letter-spacing:2px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.dialog-msgs{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.dialog-msgs::-webkit-scrollbar{width:2px}
+.dialog-msgs::-webkit-scrollbar-thumb{background:rgba(0,229,255,.18);border-radius:4px}
+.dmsg{padding:10px 13px;border-radius:12px;font-size:13px;line-height:1.6;max-width:88%;word-break:break-word;position:relative}
+.dmsg-user{align-self:flex-start;background:var(--glass);border:1px solid var(--border);border-radius:4px 12px 12px 12px}
+.dmsg-admin{align-self:flex-end;background:linear-gradient(145deg,rgba(0,229,255,.12),rgba(124,77,232,.1));border:1px solid var(--border-acc);border-radius:12px 4px 12px 12px}
+.dmsg-ts{font-size:8.5px;color:var(--muted);font-family:var(--font-m);margin-top:4px;text-align:right}
+.dmsg-pub{font-size:8px;color:var(--success);font-family:var(--font-m);margin-top:2px}
+.dialog-inp{flex-shrink:0;padding:10px 14px 18px;border-top:1px solid var(--border)}
+.dialog-inp-row{display:flex;gap:8px;align-items:flex-end;margin-bottom:8px}
+.dialog-inp-row textarea{flex:1;padding:10px 12px;border-radius:11px;background:var(--glass);
+  border:1px solid var(--border);color:var(--text);font-family:var(--font-b);font-size:14px;
+  resize:none;outline:none;line-height:1.5;transition:border-color .22s;min-height:44px;max-height:120px;-webkit-appearance:none}
+.dialog-inp-row textarea:focus{border-color:var(--border-acc);box-shadow:0 0 12px var(--glow1)}
+.pub-toggle{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:9px;
+  background:var(--glass);border:1px solid var(--border);cursor:pointer;transition:all .2s;font-size:11px;color:var(--muted)}
+.pub-toggle.pub{border-color:rgba(0,230,118,.3);color:var(--success);background:rgba(0,230,118,.06)}
+.pub-toggle-dot{width:8px;height:8px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:all .2s}
+.pub-toggle.pub .pub-toggle-dot{background:var(--success);box-shadow:0 0 6px var(--success)}
+.dialog-send-btn{padding:10px 16px;border-radius:10px;background:linear-gradient(145deg,rgba(0,229,255,.17),rgba(124,77,232,.15));
+  border:1px solid var(--border-acc);color:var(--acc1);font-family:var(--font-d);font-size:10px;font-weight:700;
+  letter-spacing:3px;cursor:pointer;transition:all .22s;white-space:nowrap;flex-shrink:0}
+.dialog-send-btn:hover{box-shadow:0 0 20px var(--glow1)}
+.dialog-send-btn:disabled{opacity:.4;cursor:not-allowed}
+.dialog-send-btn:active{transform:scale(.96)}
+
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--font-b);font-size:15px}
+#cvs{position:fixed;top:0;left:0;right:0;bottom:0;z-index:0;pointer-events:none;opacity:.55;transition:opacity .5s}
+.vignette{position:fixed;top:0;left:0;right:0;bottom:0;z-index:1;pointer-events:none;
+  background:radial-gradient(ellipse at center,transparent 30%,rgba(2,4,12,.8) 100%)}
+#scanlines{position:fixed;top:0;left:0;right:0;bottom:0;z-index:1;pointer-events:none;transition:opacity .4s;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.016) 2px,rgba(0,0,0,.016) 4px)}
+#blur-overlay{position:fixed;top:0;left:0;right:0;bottom:0;z-index:999;
+  backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);background:rgba(4,6,16,.65);
+  display:none;align-items:center;justify-content:center;flex-direction:column;gap:10px}
+#blur-overlay.show{display:flex}
+.blur-msg{font-family:var(--font-m);font-size:11px;letter-spacing:3px;color:var(--muted);text-transform:uppercase}
+#app{position:relative;z-index:2;height:100%;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+
+/* ─ Lang Screen ─ */
+#lang-screen{position:fixed;top:0;left:0;right:0;bottom:0;z-index:200;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:28px 22px;overflow-y:auto;
+  background:radial-gradient(ellipse at 40% 30%,rgba(0,229,255,.07),transparent 55%),
+             radial-gradient(ellipse at 70% 75%,rgba(124,77,232,.05),transparent 50%),var(--bg);
+  transition:opacity .6s ease,transform .6s ease}
+#lang-screen.gone{opacity:0;transform:scale(1.04);pointer-events:none}
+#lang-screen.hidden{display:none}
+.ls-logo{margin-bottom:30px;animation:float 5s ease-in-out infinite;flex-shrink:0}
+.ls-hexring{width:90px;height:90px;position:relative;display:flex;align-items:center;justify-content:center}
+.ls-hexring svg{position:absolute;top:0;left:0;width:100%;height:100%}
+.ls-hexring svg:first-child{animation:spinEl 12s linear infinite}
+.ls-hexring svg:nth-child(2){animation:spinEl 8s linear infinite reverse;opacity:.5}
+.ls-emoji{font-size:34px;position:relative;z-index:1;filter:drop-shadow(0 0 14px var(--acc1))}
+.ls-title{font-family:var(--font-d);font-size:23px;font-weight:900;letter-spacing:6px;text-align:center;
+  background:linear-gradient(130deg,var(--acc1),#fff,var(--acc2));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  animation:shimmer 4s linear infinite;background-size:200%;margin-bottom:5px}
+.ls-sub{font-size:9px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;
+  text-align:center;margin-bottom:7px;font-family:var(--font-m)}
+.ls-tagline{font-size:11px;color:var(--muted);text-align:center;margin-bottom:32px;letter-spacing:.3px;line-height:1.6}
+.ls-choose{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--acc1);
+  text-align:center;margin-bottom:16px;font-family:var(--font-m);animation:pulseT 2s ease-in-out infinite}
+@keyframes pulseT{0%,100%{opacity:.5}50%{opacity:1}}
+.ls-langs{display:flex;gap:10px;width:100%;max-width:300px}
+.lang-btn{flex:1;padding:14px 5px;border-radius:14px;border:1px solid var(--border);
+  background:var(--glass);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:6px;transition:all .28s;
+  animation:fadeUp .5s ease backwards}
+.lang-btn:nth-child(1){animation-delay:.1s}.lang-btn:nth-child(2){animation-delay:.2s}.lang-btn:nth-child(3){animation-delay:.3s}
+.lang-btn:hover{border-color:var(--border-acc);box-shadow:0 0 20px var(--glow1);transform:translateY(-2px)}
+.lang-btn:active{transform:scale(.96)}
+.lang-flag{font-size:24px}.lang-name{font-size:10px;letter-spacing:1px;color:var(--text);font-family:var(--font-d);font-weight:700}
+.lang-native{font-size:8px;color:var(--muted);letter-spacing:.5px}
+
+/* ─ Welcome ─ */
+#welcome{position:fixed;top:0;left:0;right:0;bottom:0;z-index:199;
+  flex-direction:column;align-items:center;justify-content:center;padding:24px 22px;overflow-y:auto;
+  background:radial-gradient(ellipse at 50% 30%,rgba(0,229,255,.06),transparent 55%),
+             radial-gradient(ellipse at 30% 80%,rgba(124,77,232,.05),transparent 50%),var(--bg);
+  transition:opacity .7s ease,transform .7s ease;display:none}
+#welcome.show{display:flex}
+#welcome.gone{opacity:0;transform:scale(1.04);pointer-events:none}
+.w-logo{margin-bottom:32px;animation:float 4.5s ease-in-out infinite;flex-shrink:0}
+.w-orb{width:105px;height:105px;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center}
+.w-ring1,.w-ring2,.w-ring3{position:absolute;border-radius:50%;border:1px solid}
+.w-ring1{top:-9px;left:-9px;right:-9px;bottom:-9px;border-color:rgba(0,229,255,.2);animation:spinEl 10s linear infinite}
+.w-ring2{top:-18px;left:-18px;right:-18px;bottom:-18px;border-color:rgba(124,77,232,.14);animation:spinEl 16s linear infinite reverse}
+.w-ring3{top:-27px;left:-27px;right:-27px;bottom:-27px;border-color:rgba(255,255,255,.04);border-style:dashed;animation:spinEl 22s linear infinite}
+.w-core{width:84px;height:84px;border-radius:50%;font-size:32px;
+  background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.12),transparent 60%),
+             linear-gradient(145deg,rgba(0,229,255,.22),rgba(124,77,232,.22));
+  border:1px solid rgba(255,255,255,.13);display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 50px var(--glow1),0 0 100px var(--glow2),inset 0 1px 0 rgba(255,255,255,.16)}
+.w-core.breathing{animation:breatheCore 4s ease-in-out infinite}
+@keyframes breatheCore{
+  0%,100%{box-shadow:0 0 40px var(--glow1),0 0 80px var(--glow2),inset 0 1px 0 rgba(255,255,255,.16)}
+  50%{box-shadow:0 0 80px var(--glow1),0 0 150px var(--glow2),inset 0 1px 0 rgba(255,255,255,.22)}}
+.w-title-block{text-align:center;margin-bottom:32px;flex-shrink:0}
+.w-title{font-family:var(--font-d);font-size:25px;font-weight:900;letter-spacing:7px;
+  background:linear-gradient(130deg,var(--acc1),#fff,var(--acc2));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  animation:shimmer 5s linear infinite;background-size:200%;line-height:1.1}
+.w-divider{font-family:var(--font-m);font-size:8px;letter-spacing:4px;color:var(--muted);margin:6px 0 5px}
+.w-sub{font-size:9px;letter-spacing:3px;color:var(--acc1);font-family:var(--font-m);text-transform:uppercase;opacity:.7}
+.w-feats{display:flex;gap:8px;width:100%;max-width:320px;margin-bottom:28px;flex-shrink:0}
+.wf{flex:1;padding:12px 4px 13px;border-radius:13px;text-align:center;
+  background:var(--glass);border:1px solid var(--border);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  animation:fadeUp .5s ease backwards}
+.wf:nth-child(1){animation-delay:.1s}.wf:nth-child(2){animation-delay:.22s}.wf:nth-child(3){animation-delay:.34s}
+.wf-ic{font-size:19px;margin-bottom:6px;display:block}
+.wf-lb{font-size:8.5px;color:var(--muted);letter-spacing:.3px;line-height:1.5}
+.w-btn{width:100%;max-width:320px;padding:17px;border-radius:15px;border:1px solid var(--border-acc);cursor:pointer;
+  font-family:var(--font-d);font-size:10px;font-weight:700;letter-spacing:5px;text-transform:uppercase;
+  background:linear-gradient(145deg,rgba(0,229,255,.14),rgba(124,77,232,.14));
+  color:var(--acc1);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
+  box-shadow:0 0 26px var(--glow1),inset 0 1px 0 rgba(255,255,255,.09);
+  transition:all .28s;flex-shrink:0;animation:fadeUp .5s .45s ease backwards}
+.w-btn:hover{box-shadow:0 0 50px var(--glow1),0 0 85px var(--glow2)}
+.w-btn:active{transform:scale(.97)}
+
+/* ─ Header ─ */
+.hdr{padding:11px 14px 8px;display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;background:linear-gradient(180deg,rgba(4,6,16,.98),transparent);
+  border-bottom:1px solid rgba(255,255,255,.04);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.hdr-l{display:flex;align-items:center;gap:9px}
+.hdr-gem{width:34px;height:34px;border-radius:9px;font-size:14px;
+  background:linear-gradient(145deg,rgba(0,229,255,.27),rgba(124,77,232,.27));
+  border:1px solid rgba(255,255,255,.11);display:flex;align-items:center;justify-content:center}
+.hdr-gem.breathing{animation:breatheGem 3s ease-in-out infinite}
+@keyframes breatheGem{
+  0%,100%{box-shadow:0 3px 13px var(--glow1),inset 0 1px 0 rgba(255,255,255,.16)}
+  50%{box-shadow:0 3px 24px var(--glow1),0 0 34px var(--glow2),inset 0 1px 0 rgba(255,255,255,.2)}}
+.hdr-name{font-family:var(--font-d);font-size:11px;font-weight:700;letter-spacing:2px;
+  background:linear-gradient(90deg,var(--acc1),#fff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hdr-st{font-size:8.5px;color:var(--acc1);letter-spacing:1.5px;text-transform:uppercase;margin-top:1px;
+  display:flex;align-items:center;gap:4px;font-family:var(--font-m)}
+.hdr-dot{width:5px;height:5px;border-radius:50%;background:var(--acc1);box-shadow:0 0 5px var(--acc1);animation:blinkDot 2s ease-in-out infinite;flex-shrink:0}
+@keyframes blinkDot{0%,100%{opacity:1}50%{opacity:.3}}
+.hdr-r{display:flex;align-items:center;gap:6px}
+.hdr-sse{width:7px;height:7px;border-radius:50%;background:var(--muted);transition:background .3s,box-shadow .3s;flex-shrink:0}
+.hdr-sse.live{background:var(--success);box-shadow:0 0 6px var(--success);animation:blinkDot 3s infinite}
+.hdr-draft-btn{font-size:16px;cursor:pointer;opacity:.5;transition:opacity .2s}
+.hdr-draft-btn.has{opacity:1;animation:blinkDot 2s infinite}
+
+/* ─ Pages ─ */
+.pages{flex:1;overflow:hidden;position:relative;min-height:0}
+.page{position:absolute;top:0;left:0;right:0;bottom:0;overflow-y:auto;
+  padding:14px 14px 88px;display:none;-webkit-overflow-scrolling:touch}
+.page.on{display:block;animation:pgIn .28s cubic-bezier(.16,1,.3,1)}
+@keyframes pgIn{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+.page::-webkit-scrollbar{width:2px}
+.page::-webkit-scrollbar-thumb{background:rgba(0,229,255,.18);border-radius:4px}
+
+/* ─ Section header ─ */
+.sh{display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.sh-icon{font-size:16px;flex-shrink:0}
+.sh-title{font-family:var(--font-d);font-size:13px;font-weight:700;letter-spacing:2px;
+  background:linear-gradient(90deg,var(--acc1),var(--text));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.sh-pill{margin-left:auto;font-size:8.5px;font-family:var(--font-m);letter-spacing:2px;
+  padding:2px 7px;border-radius:6px;background:rgba(0,229,255,.09);color:var(--acc1);border:1px solid var(--border-acc);flex-shrink:0}
+
+/* ─ Buttons ─ */
+.btn{width:100%;padding:14px;border-radius:12px;border:none;cursor:pointer;
+  font-family:var(--font-d);font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;
+  transition:all .22s;position:relative;overflow:hidden;-webkit-appearance:none;appearance:none}
+.btn-pri{background:linear-gradient(145deg,rgba(0,229,255,.17),rgba(124,77,232,.15));
+  color:var(--acc1);border:1px solid var(--border-acc);
+  box-shadow:0 0 20px var(--glow1),inset 0 1px 0 rgba(255,255,255,.08)}
+.btn-pri:hover{box-shadow:0 0 38px var(--glow1),0 0 65px var(--glow2)}
+.btn-pri:active{transform:scale(.97)}
+.btn-pri:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn-sec{background:var(--glass);color:var(--muted);border:1px solid var(--border)}
+.btn-sec:hover{border-color:var(--border-acc);color:var(--acc1)}
+.btn-sec:active{transform:scale(.97)}
+.btn-sm{padding:8px 14px;width:auto;font-size:9px;letter-spacing:2px;border-radius:9px}
+.btn-danger{background:rgba(255,77,109,.1);color:var(--danger);border:1px solid rgba(255,77,109,.25)}
+
+/* ─ Ask ─ */
+.asp{display:none}.asp.on{display:block;animation:pgIn .28s ease}
+.cats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:14px}
+.cat{padding:10px 4px;border-radius:12px;border:1px solid var(--border);
+  background:var(--glass);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;
+  transition:all .22s;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.cat.sel{border-color:var(--border-acc);background:rgba(0,229,255,.06);box-shadow:0 0 12px var(--glow1)}
+.cat:active{transform:scale(.95)}
+.cat-ic{font-size:17px}.cat-nm{font-size:9px;color:var(--muted);letter-spacing:.3px}
+
+/* Tags */
+.tags-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;min-height:28px;align-items:center}
+.tag{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:8px;
+  background:rgba(0,229,255,.08);border:1px solid var(--border-acc);
+  font-size:9px;font-family:var(--font-m);color:var(--acc1);cursor:pointer;letter-spacing:1px;
+  animation:fadeUp .2s ease}
+.tag-x{opacity:.6;font-size:10px;line-height:1}
+.tag-x:hover{opacity:1}
+.tag-input-wrap{position:relative;flex:1;min-width:80px}
+.tag-input{width:100%;background:none;border:none;outline:none;
+  font-family:var(--font-m);font-size:10px;color:var(--muted);letter-spacing:1px;
+  padding:2px 4px}
+.tag-input::placeholder{color:rgba(180,200,255,.25)}
+
+.ask-box{width:100%;min-height:115px;padding:13px;border-radius:13px;
+  background:var(--glass);border:1px solid var(--border);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  color:var(--text);font-family:var(--font-b);font-size:15px;resize:none;outline:none;line-height:1.6;
+  transition:border-color .22s,box-shadow .22s;margin-bottom:7px;-webkit-appearance:none}
+.ask-box:focus{border-color:var(--border-acc);box-shadow:0 0 16px var(--glow1)}
+.ask-box::placeholder{color:var(--muted)}
+.ask-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.cc{font-size:10px;color:var(--muted);font-family:var(--font-m)}
+.draft-saved{font-size:9px;color:var(--success);font-family:var(--font-m);opacity:0;transition:opacity .3s}
+.draft-saved.show{opacity:1}
+.cd-bar{width:100%;height:2px;border-radius:2px;background:rgba(255,255,255,.04);overflow:hidden;margin-bottom:11px}
+.cd-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--acc2),var(--acc1));transition:width 1s linear;width:0%}
+
+/* Sent */
+.sent-ic{font-size:50px;text-align:center;display:block;margin:22px 0 16px;animation:popIn .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes popIn{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:scale(1)}}
+.sent-title{font-family:var(--font-d);font-size:18px;font-weight:700;text-align:center;color:var(--acc1);margin-bottom:6px}
+.sent-sub{font-size:12px;color:var(--muted);text-align:center;margin-bottom:10px;line-height:1.6}
+.edit-timer{font-family:var(--font-m);font-size:10px;color:var(--warn);text-align:center;margin-bottom:20px;letter-spacing:1px}
+
+/* ─ My questions ─ */
+.bw{margin-bottom:4px}
+.blb{font-size:9.5px;color:var(--muted);padding:0 10px;margin-bottom:3px;font-family:var(--font-m);letter-spacing:.3px}
+.blb-r{text-align:right}
+.bub{padding:12px 14px;border-radius:13px;background:var(--glass);border:1px solid var(--border);font-size:14px;line-height:1.65}
+.bub-r{border-radius:13px 4px 13px 13px}
+.bub-l{border-radius:4px 13px 13px 13px;background:rgba(0,229,255,.05);border-color:rgba(0,229,255,.15)}
+.bub-new{animation:newPop .4s cubic-bezier(.34,1.56,.64,1);border-color:var(--border-acc)!important;box-shadow:0 0 16px var(--glow1)!important}
+@keyframes newPop{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.bcat{display:inline-block;font-size:8.5px;font-family:var(--font-m);letter-spacing:1.5px;text-transform:uppercase;
+  padding:2px 7px;border-radius:6px;background:rgba(0,229,255,.09);color:var(--acc1);border:1px solid var(--border-acc);margin-bottom:6px}
+.btags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}
+.btag{font-size:8px;font-family:var(--font-m);padding:1px 6px;border-radius:5px;
+  background:rgba(124,77,232,.1);color:var(--acc2);border:1px solid rgba(124,77,232,.2)}
+.bmeta{font-size:9.5px;color:var(--muted);margin-top:6px;font-family:var(--font-m)}
+.bstatus{display:inline-flex;align-items:center;gap:3px;font-size:8.5px;font-family:var(--font-m);
+  letter-spacing:1px;margin-top:5px}
+.bstatus.read{color:var(--acc1)}.bstatus.pending{color:var(--muted)}
+.rrow{display:flex;gap:7px;margin-top:9px}
+.rbtn{flex:1;padding:8px;border-radius:9px;border:1px solid var(--border);
+  background:var(--glass);color:var(--text);font-size:12px;cursor:pointer;
+  transition:all .18s;font-family:var(--font-b);font-weight:600}
+.rbtn:hover{border-color:var(--border-acc);color:var(--acc1)}
+.rbtn:active{transform:scale(.95)}
+.dvd{height:1px;background:var(--border);margin:13px 0}
+.empty{text-align:center;padding:40px 16px;color:var(--muted)}
+.eic{font-size:38px;display:block;margin-bottom:13px;animation:float 3.5s ease-in-out infinite}
+.wait-row{text-align:center;padding:6px 0 3px;color:var(--muted);font-size:11px;font-family:var(--font-m)}
+
+/* Pagination */
+.pager{display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 0;margin-top:4px}
+.pager-btn{padding:7px 14px;border-radius:9px;border:1px solid var(--border);background:var(--glass);
+  color:var(--muted);font-size:10px;font-family:var(--font-m);cursor:pointer;transition:all .2s}
+.pager-btn:hover:not(:disabled){border-color:var(--border-acc);color:var(--acc1)}
+.pager-btn:disabled{opacity:.3;cursor:default}
+.pager-info{font-size:10px;font-family:var(--font-m);color:var(--muted)}
+
+/* ─ How it works ─ */
+.how-hero{text-align:center;padding:16px 0 22px}
+.how-orb{width:72px;height:72px;border-radius:50%;margin:0 auto 14px;font-size:27px;
+  background:linear-gradient(145deg,rgba(0,229,255,.17),rgba(124,77,232,.17));
+  border:1px solid var(--border-acc);display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 28px var(--glow1);animation:breatheCore 4s ease-in-out infinite}
+.how-title{font-family:var(--font-d);font-size:17px;font-weight:700;color:var(--text);margin-bottom:5px}
+.how-sub{font-size:11px;color:var(--muted);line-height:1.6;max-width:270px;margin:0 auto}
+.how-steps{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.how-step{display:flex;gap:12px;align-items:flex-start;padding:14px;border-radius:13px;
+  background:var(--glass);border:1px solid var(--border);animation:fadeUp .35s ease backwards}
+.how-step:nth-child(1){animation-delay:.05s}.how-step:nth-child(2){animation-delay:.09s}
+.how-step:nth-child(3){animation-delay:.13s}.how-step:nth-child(4){animation-delay:.17s}.how-step:nth-child(5){animation-delay:.21s}
+.step-num{width:30px;height:30px;border-radius:9px;flex-shrink:0;font-size:11px;font-family:var(--font-m);
+  background:linear-gradient(145deg,rgba(0,229,255,.18),rgba(124,77,232,.14));
+  border:1px solid var(--border-acc);display:flex;align-items:center;justify-content:center;color:var(--acc1)}
+.step-title{font-family:var(--font-d);font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px}
+.step-desc{font-size:11px;color:var(--muted);line-height:1.6}
+.anon-proof{padding:14px;border-radius:13px;margin-bottom:10px;
+  background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.17)}
+.anon-proof-title{font-family:var(--font-m);font-size:9px;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--acc1);margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.anon-proof-row{display:flex;justify-content:space-between;align-items:center;
+  padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:11px}
+.anon-proof-row:last-child{border-bottom:none;padding-bottom:0}
+.apr-key{color:var(--muted)}.apr-val{color:var(--success);font-family:var(--font-m);font-size:9.5px;letter-spacing:.5px}
+.hash-demo{margin-top:9px;padding:9px;border-radius:9px;background:rgba(0,0,0,.3);
+  font-family:var(--font-m);font-size:9.5px;letter-spacing:.8px;color:var(--muted);word-break:break-all;line-height:1.9}
+.hash-arrow{color:var(--acc1);display:block;margin:3px 0;font-size:13px}
+.faq-item{border-radius:11px;background:var(--glass);border:1px solid var(--border);overflow:hidden;margin-bottom:7px}
+.faq-q{padding:12px 13px;font-size:12px;font-weight:600;color:var(--text);
+  display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-family:var(--font-b)}
+.faq-q:active{background:rgba(255,255,255,.03)}
+.faq-arrow{color:var(--acc1);font-size:9px;transition:transform .22s;font-family:var(--font-m);flex-shrink:0}
+.faq-a{display:none;padding:0 13px 12px;font-size:11px;color:var(--muted);line-height:1.7}
+.faq-item.open .faq-a{display:block;animation:pgIn .2s ease}
+.faq-item.open .faq-arrow{transform:rotate(180deg)}
+
+/* ─ Admin ─ */
+.alog-wrap{padding:6px 0 16px}
+.apass-lbl{font-size:9.5px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-family:var(--font-m);margin-bottom:9px}
+.apass{width:100%;padding:13px 14px;border-radius:12px;
+  background:var(--glass);border:1px solid var(--border);color:var(--text);
+  font-family:var(--font-m);font-size:16px;letter-spacing:4px;outline:none;
+  transition:border-color .22s,box-shadow .22s;-webkit-appearance:none}
+.apass:focus{border-color:var(--border-acc);box-shadow:0 0 16px var(--glow1)}
+.aerr{font-size:11px;color:var(--danger);margin:8px 0;display:none;font-family:var(--font-m);animation:shake .3s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.sc{padding:13px;border-radius:13px;background:var(--glass);border:1px solid var(--border)}
+.sc-n{font-family:var(--font-d);font-size:22px;font-weight:700;color:var(--acc1)}
+.sc-l{font-size:9.5px;color:var(--muted);margin-top:3px}
+
+/* Activity chart */
+.chart-wrap{padding:14px;border-radius:13px;background:var(--glass);border:1px solid var(--border);margin-bottom:14px}
+.chart-title{font-family:var(--font-m);font-size:9px;letter-spacing:2px;color:var(--acc1);margin-bottom:10px;text-transform:uppercase}
+.chart-bars{display:flex;align-items:flex-end;gap:2px;height:50px}
+.chart-bar{flex:1;border-radius:2px 2px 0 0;background:linear-gradient(0deg,var(--acc2),var(--acc1));
+  transition:height .4s ease;min-height:2px;opacity:.7}
+.chart-bar:hover{opacity:1}
+.cat-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.cat-pill{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:8px;
+  background:var(--glass);border:1px solid var(--border);font-size:10px;font-family:var(--font-b)}
+.cat-pill-n{font-family:var(--font-m);font-size:9px;color:var(--acc1)}
+
+/* Search + filters */
+.adm-search{position:relative;margin-bottom:10px}
+.adm-search-input{width:100%;padding:10px 13px 10px 34px;border-radius:11px;
+  background:var(--glass);border:1px solid var(--border);color:var(--text);
+  font-family:var(--font-b);font-size:14px;outline:none;transition:border-color .22s;-webkit-appearance:none}
+.adm-search-input:focus{border-color:var(--border-acc)}
+.adm-search-input::placeholder{color:var(--muted)}
+.adm-search-ic{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:14px;pointer-events:none}
+.fbar{display:flex;gap:5px;margin-bottom:12px;overflow-x:auto;padding-bottom:3px}
+.fbar::-webkit-scrollbar{display:none}
+.fb{padding:5px 11px;border-radius:8px;border:1px solid var(--border);background:var(--glass);
+  color:var(--muted);font-size:10px;cursor:pointer;white-space:nowrap;transition:all .18s;
+  font-family:var(--font-b);font-weight:600;flex-shrink:0}
+.fb.on{border-color:var(--border-acc);color:var(--acc1);background:rgba(0,229,255,.06)}
+.fb:active{transform:scale(.95)}
+
+/* Question cards */
+.aq{padding:13px;border-radius:13px;margin-bottom:10px;background:var(--glass);border:1px solid var(--border);animation:fadeUp .28s ease;position:relative}
+.aq.new{border-color:rgba(0,229,255,.26);box-shadow:0 0 16px var(--glow1)}
+.aq.starred{border-color:rgba(255,209,102,.3)}
+.aq.starred::before{content:'⭐';position:absolute;top:10px;right:10px;font-size:11px}
+.aq-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;gap:6px}
+.aq-id{font-size:9.5px;color:var(--muted);font-family:var(--font-m);display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.npill{font-size:7.5px;font-family:var(--font-m);letter-spacing:1.5px;
+  padding:1px 5px;border-radius:5px;background:rgba(0,229,255,.13);color:var(--acc1);
+  border:1px solid rgba(0,229,255,.26);animation:blinkDot 1.5s infinite}
+.read-pill{font-size:7.5px;font-family:var(--font-m);padding:1px 5px;border-radius:5px;
+  background:rgba(0,230,118,.1);color:var(--success);border:1px solid rgba(0,230,118,.2)}
+.aq-cat{font-size:8.5px;font-family:var(--font-m);letter-spacing:1.5px;
+  padding:2px 7px;border-radius:6px;background:rgba(124,77,232,.13);color:var(--acc2);border:1px solid rgba(124,77,232,.22);flex-shrink:0}
+.aq-txt{font-size:13px;line-height:1.6;margin-bottom:11px}
+.aq-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:9px}
+.aq-tag{font-size:8px;font-family:var(--font-m);padding:1px 6px;border-radius:5px;
+  background:rgba(0,229,255,.07);color:var(--acc1);border:1px solid rgba(0,229,255,.15)}
+.aq-act{display:flex;gap:5px;flex-wrap:wrap}
+.aqb{padding:7px 8px;border-radius:8px;border:1px solid var(--border);
+  background:var(--glass);color:var(--muted);font-size:10px;cursor:pointer;
+  transition:all .18s;font-family:var(--font-b);font-weight:600;white-space:nowrap}
+.aqb:hover{border-color:var(--border-acc);color:var(--text)}
+.aqb.re{color:var(--acc1);border-color:rgba(0,229,255,.2)}
+.aqb.de{color:var(--danger);border-color:rgba(255,77,109,.18)}
+.aqb.star{color:var(--warn);border-color:rgba(255,209,102,.2)}
+.aqb:active{transform:scale(.94)}
+
+/* Reply overlay */
+.rov{position:fixed;top:0;left:0;right:0;bottom:0;z-index:300;
+  background:rgba(2,4,12,.82);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
+  display:none;align-items:flex-end}
+.rov.on{display:flex;animation:fadeOv .22s ease}
+@keyframes fadeOv{from{opacity:0}to{opacity:1}}
+.rov-box{width:100%;padding:20px 16px 28px;border-radius:20px 20px 0 0;
+  background:linear-gradient(180deg,rgba(10,14,28,.99),rgba(4,6,16,.99));
+  border-top:1px solid var(--border);animation:slideUp .26s cubic-bezier(.16,1,.3,1)}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.mqid{font-family:var(--font-m);font-size:9.5px;color:var(--acc1);letter-spacing:2px;margin-bottom:5px}
+.mqtxt{font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6;
+  padding:9px 11px;border-radius:9px;background:var(--glass);border:1px solid var(--border);
+  max-height:80px;overflow-y:auto}
+.templates-row{display:flex;gap:6px;overflow-x:auto;margin-bottom:10px;padding-bottom:2px}
+.templates-row::-webkit-scrollbar{display:none}
+.tmpl-btn{flex-shrink:0;padding:5px 10px;border-radius:8px;border:1px solid var(--border-acc);
+  background:rgba(0,229,255,.06);color:var(--acc1);font-size:9.5px;cursor:pointer;
+  font-family:var(--font-m);white-space:nowrap;transition:all .18s}
+.tmpl-btn:hover{background:rgba(0,229,255,.12)}
+.tmpl-btn:active{transform:scale(.95)}
+.rtxt{width:100%;min-height:75px;padding:12px;border-radius:11px;
+  background:var(--glass);border:1px solid var(--border);color:var(--text);
+  font-family:var(--font-b);font-size:14px;resize:none;outline:none;line-height:1.6;
+  transition:border-color .22s,box-shadow .22s;margin-bottom:10px;-webkit-appearance:none}
+.rtxt:focus{border-color:var(--border-acc);box-shadow:0 0 16px var(--glow1)}
+.rov-acts{display:flex;gap:8px}
+.rov-extra{margin-top:6px}
+.rov-extra-row{display:flex;gap:6px;margin-top:6px}
+
+/* ─ Settings ─ */
+.sett-section{margin-bottom:20px}
+.sett-hdr{font-family:var(--font-m);font-size:8.5px;font-weight:700;letter-spacing:3px;
+  text-transform:uppercase;color:var(--acc1);margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.sett-hdr::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border-acc),transparent)}
+.profile-card{padding:16px;border-radius:15px;background:var(--glass);border:1px solid var(--border);
+  display:flex;align-items:center;gap:13px;margin-bottom:16px}
+.prof-av{width:48px;height:48px;border-radius:13px;font-size:20px;flex-shrink:0;
+  background:linear-gradient(145deg,rgba(0,229,255,.24),rgba(124,77,232,.24));
+  border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;
+  box-shadow:0 3px 14px var(--glow1)}
+.prof-nm{font-family:var(--font-d);font-size:14px;font-weight:700;color:var(--text)}
+.prof-id{font-size:9.5px;color:var(--muted);font-family:var(--font-m);margin-top:3px}
+.prof-badge{display:inline-flex;align-items:center;gap:3px;margin-top:5px;
+  font-size:8.5px;font-family:var(--font-m);letter-spacing:2px;
+  padding:2px 8px;border-radius:7px;background:rgba(0,229,255,.09);color:var(--acc1);border:1px solid var(--border-acc)}
+.themes{display:flex;gap:8px;flex-wrap:wrap}
+.th{width:44px;height:44px;border-radius:12px;cursor:pointer;border:2px solid transparent;
+  transition:all .2s;display:flex;align-items:center;justify-content:center}
+.th.active{border-color:rgba(255,255,255,.75);box-shadow:0 0 16px rgba(255,255,255,.22)}
+.th:active{transform:scale(.9)}
+.th-dot{width:28px;height:28px;border-radius:50%}
+.sett-row{display:flex;align-items:center;justify-content:space-between;
+  padding:12px 13px;border-radius:12px;background:var(--glass);border:1px solid var(--border);margin-bottom:7px}
+.sett-row-l{display:flex;align-items:center;gap:10px;min-width:0}
+.sett-row-ic{font-size:17px;flex-shrink:0}
+.sett-row-nm{font-size:13px;font-weight:600;font-family:var(--font-b);color:var(--text)}
+.sett-row-ds{font-size:9.5px;color:var(--muted);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:190px}
+.tog{position:relative;width:42px;height:23px;cursor:pointer;flex-shrink:0}
+.tog input{opacity:0;width:0;height:0;position:absolute}
+.tog-sl{position:absolute;top:0;left:0;right:0;bottom:0;border-radius:23px;
+  background:var(--glass);border:1px solid var(--border);transition:all .26s}
+.tog-sl::before{content:'';position:absolute;width:16px;height:16px;border-radius:50%;
+  left:3px;top:3px;background:var(--muted);transition:all .26s}
+.tog input:checked+.tog-sl{background:rgba(0,229,255,.14);border-color:var(--border-acc)}
+.tog input:checked+.tog-sl::before{background:var(--acc1);transform:translateX(19px);box-shadow:0 0 7px var(--glow1)}
+.range-wrap{padding:0 2px}
+.range-lbl{font-size:9.5px;color:var(--muted);font-family:var(--font-m);letter-spacing:1.5px;margin-bottom:9px;
+  display:flex;justify-content:space-between}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:3px;border-radius:3px;
+  outline:none;cursor:pointer;background:rgba(255,255,255,.09)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:19px;height:19px;border-radius:50%;
+  background:var(--acc1);box-shadow:0 0 9px var(--glow1),0 1px 4px rgba(0,0,0,.5);cursor:pointer;
+  border:2px solid rgba(255,255,255,.22)}
+input[type=range]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;
+  background:var(--acc1);box-shadow:0 0 9px var(--glow1);cursor:pointer;border:2px solid rgba(255,255,255,.22)}
+.lang-opts{display:flex;gap:7px}
+.ls-opt{flex:1;padding:10px 4px;border-radius:10px;border:1px solid var(--border);
+  background:var(--glass);cursor:pointer;text-align:center;font-size:15px;transition:all .2s}
+.ls-opt.active{border-color:var(--border-acc);box-shadow:0 0 10px var(--glow1)}
+.ls-opt:active{transform:scale(.94)}
+.cooldown-set-wrap{display:flex;align-items:center;gap:10px}
+.cooldown-inp{flex:1;padding:9px 12px;border-radius:10px;background:var(--glass);border:1px solid var(--border);
+  color:var(--text);font-family:var(--font-m);font-size:14px;outline:none;-webkit-appearance:none;text-align:center}
+.cooldown-inp:focus{border-color:var(--border-acc)}
+
+/* ─ Bottom nav ─ */
+.bot-nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:50;
+  padding:8px 12px 20px;display:none;
+  background:linear-gradient(0deg,rgba(4,6,16,.98) 50%,rgba(4,6,16,.6) 85%,transparent);
+  backdrop-filter:blur(0px);
+}
+.bot-nav.show{display:block}
+/* Єдина скляна панель */
+.bot-nav-inner{
+  display:flex;gap:4px;padding:5px;
+  border-radius:20px;
+  background:linear-gradient(160deg,rgba(255,255,255,.09),rgba(255,255,255,.03) 60%,rgba(0,0,0,.15));
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 -1px 0 rgba(255,255,255,.07) inset,0 10px 40px rgba(0,0,0,.5),0 2px 0 rgba(0,0,0,.25) inset;
+  backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);
+}
+/* Кнопки всередині панелі */
+.bnnb{
+  flex:1;padding:9px 3px 7px;
+  border-radius:15px;border:1px solid transparent;
+  background:transparent;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  transition:all .22s cubic-bezier(.34,1.2,.64,1);
+  position:relative;overflow:hidden;
+}
+.bnnb:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.09);}
+/* Активна — виділена таблетка зі своїм glass-ефектом */
+.bnnb.on{
+  background:linear-gradient(160deg,rgba(255,255,255,.14),rgba(255,255,255,.04) 55%,rgba(0,0,0,.06));
+  border-color:rgba(var(--acc1-rgb),.32);
+  box-shadow:0 1px 0 rgba(255,255,255,.16) inset,0 -1px 0 rgba(0,0,0,.18) inset,0 3px 14px rgba(var(--acc1-rgb),.18);
+}
+/* Тонкий відблиск зверху активної */
+.bnnb.on::before{
+  content:'';position:absolute;top:0;left:12%;right:12%;height:40%;
+  background:linear-gradient(180deg,rgba(255,255,255,.14),transparent);
+  border-radius:0 0 50% 50%;pointer-events:none;
+}
+.bnnb:active{transform:scale(.92);opacity:.8;}
+.bnnb-ic{font-size:18px;transition:transform .22s cubic-bezier(.34,1.4,.64,1);display:block;position:relative;z-index:1;}
+.bnnb.on .bnnb-ic{transform:scale(1.14) translateY(-1px);filter:drop-shadow(0 0 5px rgba(var(--acc1-rgb),.65));}
+.bnnb-lb{font-size:9px;font-family:var(--font-b);font-weight:700;letter-spacing:.3px;color:var(--muted);transition:color .18s;position:relative;z-index:1;}
+.bnnb.on .bnnb-lb{color:var(--acc1);}
+.bnnb-badge{position:absolute;top:5px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--acc1);box-shadow:0 0 7px var(--acc1);display:none;animation:blinkDot 2s infinite;z-index:2;}
+.bnnb-badge.on{display:block;}
+/* RGB vars для glow */
+:root{--acc1-rgb:0,229,255}
+[data-theme="cyan"]{--acc1-rgb:0,229,255}
+[data-theme="violet"]{--acc1-rgb:181,107,255}
+[data-theme="green"]{--acc1-rgb:0,255,157}
+[data-theme="gold"]{--acc1-rgb:255,209,102}
+[data-theme="red"]{--acc1-rgb:255,77,109}
+/* Light mode */
+[data-mode="light"] .bot-nav-inner{
+  background:linear-gradient(160deg,rgba(255,255,255,.88),rgba(255,255,255,.62) 60%,rgba(200,210,255,.35));
+  border-color:rgba(139,92,246,.16);
+  box-shadow:0 6px 28px rgba(60,40,180,.12),0 1px 0 rgba(255,255,255,.95) inset;
+}
+[data-mode="light"] .bnnb.on{background:rgba(255,255,255,.9);border-color:rgba(var(--acc1-rgb),.38);box-shadow:0 3px 12px rgba(var(--acc1-rgb),.16),0 1px 0 rgba(255,255,255,1) inset;}
+[data-mode="light"] .bnnb-lb{color:rgba(79,70,229,.5);}
+[data-mode="light"] .bnnb.on .bnnb-lb{color:var(--acc1);}
+
+/* ─ Toast ─ */
+#toast{position:fixed;bottom:98px;left:50%;transform:translateX(-50%) translateY(14px);
+  z-index:500;padding:10px 18px;border-radius:12px;
+  background:rgba(10,14,28,.95);border:1px solid var(--border-acc);
+  -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
+  font-size:12px;font-family:var(--font-b);font-weight:600;color:var(--text);
+  white-space:nowrap;pointer-events:none;opacity:0;
+  transition:all .28s cubic-bezier(.16,1,.3,1);box-shadow:0 0 22px var(--glow1)}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ─ Draft restore banner ─ */
+#draft-banner{display:none;margin-bottom:11px;padding:11px 13px;border-radius:12px;
+  background:rgba(255,209,102,.08);border:1px solid rgba(255,209,102,.25);
+  flex-direction:column;gap:7px}
+#draft-banner.show{display:flex}
+.draft-banner-top{display:flex;align-items:center;justify-content:space-between}
+.draft-banner-lbl{font-size:10px;font-family:var(--font-m);color:var(--warn);letter-spacing:1.5px}
+.draft-banner-preview{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.draft-banner-acts{display:flex;gap:6px}
+
+/* ─ Wall Reactions ─ */
+.wall-reactions{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);align-items:center;}
+.react-btn{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;background:var(--glass);border:1px solid var(--border);cursor:pointer;transition:all .18s;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);user-select:none;-webkit-user-select:none;}
+.react-btn:hover{border-color:var(--border-acc);transform:scale(1.07);}
+.react-btn:active{transform:scale(.92);}
+.react-btn.mine{background:linear-gradient(135deg,rgba(0,229,255,.14),rgba(124,77,232,.1));border-color:var(--border-acc);box-shadow:0 0 8px var(--glow1);}
+.react-emoji{font-size:15px;line-height:1;}
+.react-count{font-size:11px;font-family:var(--font-m);font-weight:700;letter-spacing:.5px;color:var(--muted);min-width:8px;}
+.react-btn.mine .react-count{color:var(--acc1);}
+.react-add{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:var(--glass);border:1px solid var(--border);font-size:15px;cursor:pointer;transition:all .18s;opacity:.55;line-height:1;}
+.react-add:hover{border-color:var(--border-acc);opacity:1;transform:scale(1.12);}
+.react-picker{display:none;flex-wrap:wrap;gap:3px;padding:8px;border-radius:14px;margin-top:6px;width:100%;background:rgba(4,6,16,.97);border:1px solid var(--border-acc);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);box-shadow:0 8px 30px rgba(0,0,0,.55);}
+.react-picker.open{display:flex;animation:pgIn .15s ease;}
+.react-picker-btn{font-size:22px;padding:5px 7px;border-radius:9px;cursor:pointer;transition:transform .12s;background:none;border:none;line-height:1;}
+.react-picker-btn:hover{transform:scale(1.3);}
+
+/* ─ Animations ─ */
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes shimmer{0%{background-position:0%}100%{background-position:200%}}
+@keyframes spinEl{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<canvas id="cvs"></canvas>
+<div class="vignette"></div>
+<div id="scanlines"></div>
+<div id="blur-overlay"><span style="font-size:30px">👁</span><span class="blur-msg" id="blur-msg">HIDDEN</span></div>
+<div id="toast"></div>
+
+<!-- LANG -->
+<div id="lang-screen">
+  <div class="ls-logo">
+    <div class="ls-hexring">
+      <svg viewBox="0 0 100 100" fill="none"><polygon points="50,4 93,27.5 93,72.5 50,96 7,72.5 7,27.5" stroke="rgba(0,229,255,0.27)" stroke-width="1" fill="none"/></svg>
+      <svg viewBox="0 0 100 100" fill="none"><polygon points="50,4 93,27.5 93,72.5 50,96 7,72.5 7,27.5" stroke="rgba(124,77,232,0.17)" stroke-width="1" fill="none" stroke-dasharray="4 3"/></svg>
+      <span class="ls-emoji">🔮</span>
+    </div>
+  </div>
+  <div class="ls-title">SILENCE·NET</div>
+    <div class="ls-sub">ANONIMQ</div>
+  <div class="ls-tagline">Запитай анонімно · Ask anonymously<br>Получи ответ · Get a reply</div>
+  <div class="ls-choose" id="ls-choose">Оберіть мову · Choose language</div>
+  <div class="ls-langs">
+    <button class="lang-btn" onclick="setLang('uk')"><span class="lang-flag">🇺🇦</span><span class="lang-name">UA</span><span class="lang-native">Українська</span></button>
+    <button class="lang-btn" onclick="setLang('en')"><span class="lang-flag">🇬🇧</span><span class="lang-name">EN</span><span class="lang-native">English</span></button>
+    <button class="lang-btn" onclick="setLang('ru')"><span class="lang-flag">🇷🇺</span><span class="lang-name">RU</span><span class="lang-native">Русский</span></button>
+  </div>
+</div>
+
+<!-- WELCOME -->
+<div id="welcome">
+  <div class="w-logo"><div class="w-orb"><div class="w-ring1"></div><div class="w-ring2"></div><div class="w-ring3"></div><div class="w-core breathing" id="w-core">🔮</div></div></div>
+  <div class="w-title-block">
+    <div class="w-title">SILENCE·NET</div>
+    <div class="w-divider">◈ ANONIMQ ◈</div>
+    <div class="w-sub" id="w-sub">Anon Question</div>
+  </div>
+  <div class="w-feats">
+    <div class="wf"><span class="wf-ic">🎭</span><div class="wf-lb" id="wf1">Anonymous</div></div>
+    <div class="wf"><span class="wf-ic">⚡</span><div class="wf-lb" id="wf2">Instant</div></div>
+    <div class="wf"><span class="wf-ic">🔐</span><div class="wf-lb" id="wf3">Secure</div></div>
+  </div>
+  <button class="w-btn" id="w-enter-btn">▶ ENTER</button>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none">
+  <div class="hdr">
+    <div class="hdr-l">
+      <div class="hdr-gem breathing" id="hdr-gem">🔮</div>
+      <div><div class="hdr-name">SILENCE·NET: ANONIMQ</div><div class="hdr-st"><span class="hdr-dot"></span><span id="hdr-online">ONLINE</span></div></div>
+    </div>
+    <div class="hdr-r">
+      <div class="hdr-sse" id="hdr-sse" title="Live connection"></div>
+      <div class="hdr-draft-btn" id="hdr-draft-btn" onclick="goPage('ask')" title="Draft">✏️</div>
+    </div>
+  </div>
+
+  <div class="pages">
+
+    <!-- ASK -->
+    <div class="page on" id="page-ask">
+      <div class="sh"><span class="sh-icon">❓</span><span class="sh-title" id="sh-ask">ASK</span><span class="sh-pill" id="sh-pill">ANON</span></div>
+      <div id="draft-banner" class="draft-banner">
+        <div class="draft-banner-top">
+          <span class="draft-banner-lbl" id="draft-lbl">✏️ DRAFT SAVED</span>
+          <div class="draft-banner-acts">
+            <button class="btn btn-sm btn-pri" onclick="restoreDraft()" id="draft-restore-btn">Restore</button>
+            <button class="btn btn-sm btn-sec" onclick="discardDraft()">✕</button>
+          </div>
+        </div>
+        <div class="draft-banner-preview" id="draft-preview"></div>
+      </div>
+      <div class="asp on" id="asp-form">
+        <div class="apass-lbl" id="lbl-cat" style="margin-bottom:8px">Category</div>
+        <div class="cats" id="cats-grid">
+          <div class="cat sel" data-cat="Other"><span class="cat-ic">💭</span><span class="cat-nm" id="cat-other">Other</span></div>
+          <div class="cat" data-cat="Tech"><span class="cat-ic">💻</span><span class="cat-nm">Tech</span></div>
+          <div class="cat" data-cat="Personal"><span class="cat-ic">🙋</span><span class="cat-nm" id="cat-pers">Personal</span></div>
+          <div class="cat" data-cat="Philosophy"><span class="cat-ic">🧠</span><span class="cat-nm" id="cat-phil">Philosophy</span></div>
+          <div class="cat" data-cat="Humor"><span class="cat-ic">😂</span><span class="cat-nm" id="cat-hum">Humor</span></div>
+          <div class="cat" data-cat="Advice"><span class="cat-ic">🤝</span><span class="cat-nm" id="cat-adv">Advice</span></div>
+        </div>
+        <div class="apass-lbl" id="lbl-tags" style="margin-bottom:6px">Tags (optional)</div>
+        <div class="tags-row" id="tags-row">
+          <div class="tag-input-wrap"><input class="tag-input" id="tag-input" placeholder="+ add tag, Enter" maxlength="20"/></div>
+        </div>
+        <textarea class="ask-box" id="qt" maxlength="1000" placeholder="Write your anonymous question…"></textarea>
+        <div class="ask-meta">
+          <span class="cc"><span id="cc">0</span>/1000</span>
+          <span class="draft-saved" id="draft-saved-lbl">💾 Draft saved</span>
+        </div>
+        <div class="cd-bar"><div class="cd-fill" id="cdf"></div></div>
+        <button class="btn btn-pri" id="btn-send">▶ SEND</button>
+      </div>
+      <div class="asp" id="asp-sent">
+        <span class="sent-ic">✅</span>
+        <div class="sent-title" id="sent-title">Sent!</div>
+        <div class="sent-sub" id="sent-sub">Sent anonymously.</div>
+        <div class="edit-timer" id="edit-timer"></div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button class="btn btn-sec" id="btn-edit-q" style="display:none">✏️ Edit question</button>
+          <button class="btn btn-sec" id="btn-another">+ Another</button>
+          <button class="btn btn-pri" id="btn-tomy">View my questions →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MY QUESTIONS -->
+    <div class="page" id="page-my">
+      <div class="sh"><span class="sh-icon">💬</span><span class="sh-title" id="sh-my">MY QUESTIONS</span></div>
+      <div id="mylist"></div>
+      <div class="pager" id="my-pager" style="display:none">
+        <button class="pager-btn" id="my-prev" onclick="myPage(-1)">← Prev</button>
+        <span class="pager-info" id="my-page-info">1 / 1</span>
+        <button class="pager-btn" id="my-next" onclick="myPage(1)">Next →</button>
+      </div>
+    </div>
+
+    <!-- PUBLIC WALL -->
+    <div class="page" id="page-wall">
+      <div class="sh"><span class="sh-icon">📢</span><span class="sh-title">ПУБЛІЧНА СТІНКА</span><span class="sh-pill">ALL</span></div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:14px;line-height:1.6">Питання та відповіді, які адмін зробив публічними</div>
+      <div id="wall-list"></div>
+      <div class="pager" id="wall-pager" style="display:none">
+        <button class="pager-btn" id="wall-prev" onclick="wallPage(-1)">← Prev</button>
+        <span class="pager-info" id="wall-page-info">1 / 1</span>
+        <button class="pager-btn" id="wall-next" onclick="wallPage(1)">Next →</button>
+      </div>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <div class="page" id="page-how">
+      <div class="sh"><span class="sh-icon">🛡️</span><span class="sh-title" id="sh-how">HOW IT WORKS</span></div>
+      <div class="how-hero">
+        <div class="how-orb">🔮</div>
+        <div class="how-title" id="how-hero-title">100% Anonymous</div>
+        <div class="how-sub" id="how-hero-sub">Your identity is mathematically protected.</div>
+      </div>
+      <div class="how-steps" id="how-steps-container"></div>
+      <div class="anon-proof">
+        <div class="anon-proof-title">🔒 <span id="proof-title">ANONYMITY PROOF</span></div>
+        <div class="hash-demo" id="hash-demo">
+          <span style="color:var(--muted)">Your Telegram ID:</span> <span style="color:var(--text)">123456789</span>
+          <span class="hash-arrow">▼ BLAKE2b + secret salt</span>
+          <span style="color:var(--acc1)">a4f8c2e1d7b39f1a...</span>
+          <span class="hash-arrow">▼ <span id="hash-what">What admin sees</span></span>
+          <span style="color:var(--success)">Question text only ✓</span>
+        </div>
+        <div class="anon-proof-row"><span class="apr-key" id="apr1k">Admin sees your name</span><span class="apr-val">✗ NEVER</span></div>
+        <div class="anon-proof-row"><span class="apr-key" id="apr2k">Admin sees your ID</span><span class="apr-val">✗ NEVER</span></div>
+        <div class="anon-proof-row"><span class="apr-key" id="apr3k">Questions linked to you</span><span class="apr-val">✗ NEVER</span></div>
+        <div class="anon-proof-row"><span class="apr-key" id="apr4k">Replies reach you</span><span class="apr-val">✓ ALWAYS</span></div>
+        <div class="anon-proof-row"><span class="apr-key" id="apr5k">Your data sold</span><span class="apr-val">✗ NEVER</span></div>
+      </div>
+      <div id="faq-container"></div>
+    </div>
+
+    <!-- ADMIN -->
+    <div class="page" id="page-adm">
+      <div class="sh"><span class="sh-icon">⚡</span><span class="sh-title" id="sh-adm">ADMIN PANEL</span></div>
+      <div id="alog-wrap" class="alog-wrap">
+        <div class="apass-lbl" id="lbl-pass">Access password</div>
+        <input type="password" class="apass" id="apass" placeholder="••••••••"/>
+        <div class="aerr" id="aerr">✖ Incorrect password</div>
+        <div style="margin-top:12px"><button class="btn btn-pri" id="btn-alog">▶ ENTER</button></div>
+      </div>
+      <div id="adm-dash" style="display:none">
+        <!-- Stats -->
+        <div class="stats">
+          <div class="sc"><div class="sc-n" id="a1">—</div><div class="sc-l" id="a1l">Today</div></div>
+          <div class="sc"><div class="sc-n" id="a2">—</div><div class="sc-l" id="a2l">Pending</div></div>
+          <div class="sc"><div class="sc-n" id="a3">—</div><div class="sc-l" id="a3l">Total</div></div>
+          <div class="sc"><div class="sc-n" id="a4">—</div><div class="sc-l" id="a4l">Avg</div></div>
+        </div>
+        <!-- Admin tabs -->
+        <div class="fbar" style="margin-bottom:14px">
+          <button class="fb on" id="adm-tab-q" onclick="switchAdmTab('questions')">📋 Питання</button>
+          <button class="fb" id="adm-tab-u" onclick="switchAdmTab('users')">👥 Діалоги</button>
+        </div>
+        <!-- Questions tab -->
+        <div id="adm-tab-questions">
+          <div class="chart-wrap">
+            <div class="chart-title" id="chart-title">24H ACTIVITY</div>
+            <div class="chart-bars" id="chart-bars"></div>
+          </div>
+          <div class="adm-search"><span class="adm-search-ic">🔍</span><input class="adm-search-input" id="adm-search" placeholder="Search questions…" oninput="debounceSearch()"/></div>
+          <div class="fbar" id="adm-fbar">
+            <button class="fb on" data-f="all" id="fb-all">All</button>
+            <button class="fb" data-f="starred">⭐ Starred</button>
+            <button class="fb" data-f="Tech">💻 Tech</button>
+            <button class="fb" data-f="Personal">🙋 Personal</button>
+            <button class="fb" data-f="Other">💭 Other</button>
+          </div>
+          <div id="adml"></div>
+          <div class="pager" id="adm-pager" style="display:none">
+            <button class="pager-btn" id="adm-prev" onclick="admPage(-1)">← Prev</button>
+            <span class="pager-info" id="adm-page-info">1 / 1</span>
+            <button class="pager-btn" id="adm-next" onclick="admPage(1)">Next →</button>
+          </div>
+          <div style="margin-top:14px;display:flex;gap:7px;flex-wrap:wrap">
+            <button class="btn btn-sec btn-sm" onclick="exportCSV()">📥 Export CSV</button>
+            <button class="btn btn-danger btn-sm" onclick="adminLogout()">✕ Logout</button>
+          </div>
+        </div>
+        <!-- Users/Dialogs tab -->
+        <div id="adm-tab-users" style="display:none">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Клацніть на користувача щоб відкрити діалог</div>
+          <div id="users-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="page" id="page-set">
+      <div class="sh"><span class="sh-icon">⚙️</span><span class="sh-title" id="sh-set">SETTINGS</span></div>
+      <div class="profile-card">
+        <div class="prof-av">👤</div>
+        <div style="min-width:0">
+          <div class="prof-nm" id="prof-nm">User</div>
+          <div class="prof-id" id="prof-id">ID: ——</div>
+          <div class="prof-badge">🎭 <span id="prof-anon">ANONYMOUS</span></div>
+        </div>
+      </div>
+      <div class="sett-section">
+        <div class="sett-hdr" id="sett-lang-hdr">🌐 LANGUAGE</div>
+        <div class="lang-opts"><div class="ls-opt" id="lopt-uk" onclick="changeLang('uk')">🇺🇦</div><div class="ls-opt" id="lopt-en" onclick="changeLang('en')">🇬🇧</div><div class="ls-opt" id="lopt-ru" onclick="changeLang('ru')">🇷🇺</div></div>
+      </div>
+      <div class="sett-section">
+        <div class="sett-hdr" id="sett-color-hdr">🎨 COLOR</div>
+        <div class="themes">
+          <div class="th" data-theme="cyan" onclick="setTheme('cyan')"><div class="th-dot" style="background:linear-gradient(135deg,#00e5ff,#7c4de8)"></div></div>
+          <div class="th" data-theme="violet" onclick="setTheme('violet')"><div class="th-dot" style="background:linear-gradient(135deg,#b56bff,#ff6bdb)"></div></div>
+          <div class="th" data-theme="green" onclick="setTheme('green')"><div class="th-dot" style="background:linear-gradient(135deg,#00ff9d,#00c3ff)"></div></div>
+          <div class="th" data-theme="gold" onclick="setTheme('gold')"><div class="th-dot" style="background:linear-gradient(135deg,#ffd166,#ff9f4a)"></div></div>
+          <div class="th" data-theme="red" onclick="setTheme('red')"><div class="th-dot" style="background:linear-gradient(135deg,#ff4d6d,#ff8c42)"></div></div>
+        </div>
+      </div>
+      <div class="sett-section">
+        <div class="sett-hdr" id="sett-glow-hdr">✨ GLOW INTENSITY</div>
+        <div class="range-wrap">
+          <div class="range-lbl"><span id="lbl-low">Low</span><span id="lbl-glow-val" style="color:var(--acc1)">50%</span><span id="lbl-hi">High</span></div>
+          <input type="range" id="glow-range" min="0" max="100" value="50" oninput="onGlowChange(this.value)"/>
+        </div>
+      </div>
+      <div class="sett-section">
+        <div class="sett-hdr" id="sett-anim-hdr">💫 ANIMATION</div>
+        <div class="sett-row"><div class="sett-row-l"><span class="sett-row-ic">🫧</span><div><div class="sett-row-nm" id="sett-particles">Particles</div><div class="sett-row-ds" id="sett-particles-ds">Ambient particles</div></div></div><label class="tog"><input type="checkbox" id="tog-particles" checked onchange="onToggleParticles(this.checked)"/><span class="tog-sl"></span></label></div>
+        <div class="sett-row"><div class="sett-row-l"><span class="sett-row-ic">💓</span><div><div class="sett-row-nm" id="sett-breathe">Breathing</div><div class="sett-row-ds" id="sett-breathe-ds">UI elements breathe</div></div></div><label class="tog"><input type="checkbox" id="tog-breathe" checked onchange="onToggleBreathe(this.checked)"/><span class="tog-sl"></span></label></div>
+        <div class="sett-row"><div class="sett-row-l"><span class="sett-row-ic">🌊</span><div><div class="sett-row-nm" id="sett-scanlines">Scanlines</div><div class="sett-row-ds" id="sett-scanlines-ds">Retro CRT overlay</div></div></div><label class="tog"><input type="checkbox" id="tog-scan" checked onchange="onToggleScan(this.checked)"/><span class="tog-sl"></span></label></div>
+      </div>
+      <div class="sett-section">
+        <div class="sett-hdr" id="sett-notif-hdr">🔔 NOTIFICATIONS</div>
+        <div class="sett-row"><div class="sett-row-l"><span class="sett-row-ic">📳</span><div><div class="sett-row-nm" id="sett-haptic">Haptic</div><div class="sett-row-ds" id="sett-haptic-ds">Vibration on actions</div></div></div><label class="tog"><input type="checkbox" id="tog-haptic" checked/><span class="tog-sl"></span></label></div>
+        <div class="sett-row"><div class="sett-row-l"><span class="sett-row-ic">💾</span><div><div class="sett-row-nm" id="sett-autodraft">Auto-draft</div><div class="sett-row-ds" id="sett-autodraft-ds">Auto-save unfinished questions</div></div></div><label class="tog"><input type="checkbox" id="tog-autodraft" checked/><span class="tog-sl"></span></label></div>
+      </div>
+      <div class="sett-section">
+        <div class="sett-hdr" id="sett-priv-hdr">🔒 PRIVACY</div>
+        <div class="sett-row"><div class="sett-row-l"><span class="sett-row-ic">👁️</span><div><div class="sett-row-nm" id="sett-blur">Blur on switch</div><div class="sett-row-ds" id="sett-blur-ds">Hide when backgrounded</div></div></div><label class="tog"><input type="checkbox" id="tog-blur" checked onchange="onToggleBlur(this.checked)"/><span class="tog-sl"></span></label></div>
+        <div class="sett-row"><div class="sett-row-l"><span class="sett-row-ic">🕒</span><div><div class="sett-row-nm" id="sett-hist">Save history</div><div class="sett-row-ds" id="sett-hist-ds">Store locally</div></div></div><label class="tog"><input type="checkbox" id="tog-hist" checked/><span class="tog-sl"></span></label></div>
+      </div>
+      <div style="text-align:center;padding:12px 0 4px;font-family:var(--font-m);font-size:8.5px;color:var(--muted);letter-spacing:3px">SILENCE·NET: ANONIMQ v2.1 ◈ <span id="ver-anon">ANONYMOUS</span></div>
+    </div>
+  </div>
+
+  <!-- Bottom nav -->
+  <div class="bot-nav" id="bot-nav">
+    <div class="bot-nav-inner">
+      <button class="bnnb on" id="bnnb-ask" onclick="goPage('ask')"><span class="bnnb-ic">❓</span><span class="bnnb-lb" id="nav-ask">Ask</span></button>
+      <button class="bnnb" id="bnnb-my" onclick="goPage('my')"><span class="bnnb-ic">💬</span><span class="bnnb-lb" id="nav-my">Answers</span><span class="bnnb-badge" id="bdg"></span></button>
+      <button class="bnnb" id="bnnb-wall" onclick="goPage('wall')"><span class="bnnb-ic">📢</span><span class="bnnb-lb">Wall</span></button>
+      <button class="bnnb" id="bnnb-adm" onclick="goPage('adm')"><span class="bnnb-ic">⚡</span><span class="bnnb-lb" id="nav-adm">Admin</span></button>
+      <button class="bnnb" id="bnnb-set" onclick="goPage('set')"><span class="bnnb-ic">⚙️</span><span class="bnnb-lb" id="nav-set">Settings</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- Reply overlay -->
+<div class="rov" id="rov">
+  <div class="rov-box">
+    <div class="mqid" id="mqid">#—</div>
+    <div class="mqtxt" id="mqtxt"></div>
+    <div class="templates-row" id="tmpl-row"></div>
+    <textarea class="rtxt" id="rtxt" rows="4" placeholder="Reply…"></textarea>
+    <div style="margin-bottom:10px">
+      <button class="pub-toggle" id="pub-toggle-btn" onclick="togglePublish()">
+        <span class="pub-toggle-dot" id="pub-dot"></span>
+        <span id="pub-toggle-lbl">🔒 Особисто</span>
+      </button>
+    </div>
+    <div class="rov-acts">
+      <button class="btn btn-sec" id="btn-rclose" style="flex:.4">✖</button>
+      <button class="btn btn-pri" id="btn-rsend" style="flex:1">▶ SEND</button>
+    </div>
+    <div class="rov-extra">
+      <button class="btn btn-sec" id="btn-rsend-extra" style="font-size:9px;letter-spacing:2px;margin-top:6px">+ Add another reply</button>
+    </div>
+  </div>
+</div>
+
+<!-- Dialog overlay (admin dialogs per user) -->
+<div class="dialog-ov" id="dialog-ov">
+  <div class="dialog-hdr">
+    <button class="dialog-back" onclick="closeDialog()">←</button>
+    <div>
+      <div class="dialog-uid" id="dialog-uid">User ——</div>
+      <div style="font-size:9px;color:var(--muted);font-family:var(--font-m);margin-top:2px" id="dialog-meta"></div>
+    </div>
+  </div>
+  <div class="dialog-msgs" id="dialog-msgs"></div>
+  <div class="dialog-inp">
+    <div class="dialog-inp-row">
+      <textarea id="dialog-txt" placeholder="Написати…" rows="2" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+      <button class="dialog-send-btn" id="dialog-send-btn" onclick="sendDialogMsg()">▶</button>
+    </div>
+    <button class="pub-toggle" id="dialog-pub-btn" onclick="toggleDialogPublish()">
+      <span class="pub-toggle-dot" id="dialog-pub-dot"></span>
+      <span id="dialog-pub-lbl">🔒 Особисто</span>
+    </button>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════
+   SILENCE·NET Frontend v2.0
+   All features combined
+═══════════════════════════════════════ */
+
+const tg=window.Telegram?.WebApp;
+if(tg){tg.expand();try{tg.setHeaderColor('#040610');tg.setBackgroundColor('#040610');}catch(e){}}
+
+const API='https://pressure-monica-manufacturer-pastor.trycloudflare.com';
+const ADMIN_PASS_KEY='sn_admin_token';
+
+// ─ State ─
+let lang=localStorage.getItem('sn_lang')||null;
+let currentTheme=localStorage.getItem('sn_theme')||'cyan';
+let glowLevel=parseInt(localStorage.getItem('sn_glow')||'50');
+let showParticles=localStorage.getItem('sn_particles')!=='false';
+let showBreathe=localStorage.getItem('sn_breathe')!=='false';
+let showScan=localStorage.getItem('sn_scan')!=='false';
+let blurOnHide=localStorage.getItem('sn_blur')!=='false';
+let myQ=[]; try{myQ=JSON.parse(localStorage.getItem('aQ')||'[]');}catch(e){}
+let aqs=[],af='all',aok=false,rqid=0,cdTimer=0;
+let adminToken=sessionStorage.getItem(ADMIN_PASS_KEY)||'';
+let selectedCat='Other';
+let currentTags=[];
+let sentQid=null,editDeadline=0,editTimer=0;
+let draftTimeout=0;
+let myCurrentPage=1,admCurrentPage=1;
+let templates=[];
+let sseSource=null;
+let searchDebounce=0;
+let admSearch='';
+
+// ─ TRANSLATIONS ─
+const TR={
+uk:{
+  'w-sub':'Анонімне питання','wf1':'Анонімно','wf2':'Миттєво','wf3':'Захищено',
+  'w-enter':'▶ УВІЙТИ','sh-ask':'ЗАДАТИ ПИТАННЯ','sh-pill':'АНОН',
+  'sh-my':'МОЇ ПИТАННЯ','sh-how':'ЯК ЦЕ ПРАЦЮЄ','sh-adm':'АДМІН ПАНЕЛЬ','sh-set':'НАЛАШТУВАННЯ',
+  'lbl-cat':'Категорія','lbl-tags':'Теги (необов\'язково)',
+  'cat-other':'Інше','cat-pers':'Особисте','cat-phil':'Філософія','cat-hum':'Гумор','cat-adv':'Порада',
+  'qt-ph':'Напишіть своє анонімне питання…','tag-ph':'+ додати тег, Enter',
+  'btn-send':'▶ НАДІСЛАТИ','sent-title':'Надіслано!','sent-sub':'Питання надіслано анонімно.',
+  'btn-another':'+ Ще питання','btn-tomy':'Мої питання →',
+  'lbl-pass':'Пароль доступу','btn-alog':'▶ УВІЙТИ','aerr-txt':'✖ Невірний пароль',
+  'a1l':'Сьогодні','a2l':'Очікують','a3l':'Всього','a4l':'Сер. час',
+  'hdr-online':'ОНЛАЙН','fb-all':'Всі',
+  'empty-ask':'Ви ще не задавали питань','wait-txt':'⏳ Очікуємо відповідь…',
+  'sett-lang-hdr':'🌐 МОВА','sett-color-hdr':'🎨 КОЛІР',
+  'sett-glow-hdr':'✨ ЯСКРАВІСТЬ СВІЧІННЯ','sett-anim-hdr':'💫 АНІМАЦІЯ',
+  'sett-notif-hdr':'🔔 СПОВІЩЕННЯ','sett-priv-hdr':'🔒 ПРИВАТНІСТЬ',
+  'lbl-low':'Слабко','lbl-hi':'Сильно',
+  'sett-particles':'Частинки','sett-particles-ds':'Фонові частинки',
+  'sett-breathe':'Ефект дихання','sett-breathe-ds':'Елементи інтерфейсу дихають',
+  'sett-scanlines':'Скан-лінії','sett-scanlines-ds':'Ретро CRT накладка',
+  'sett-haptic':'Тактильний відгук','sett-haptic-ds':'Вібрація при діях',
+  'sett-autodraft':'Авто-чернетка','sett-autodraft-ds':'Зберігати незавершені питання',
+  'sett-blur':'Розмиття','sett-blur-ds':'Ховати при мінімізації',
+  'sett-hist':'Зберігати історію','sett-hist-ds':'Локально на пристрої',
+  'nav-ask':'Питання','nav-my':'Відповіді','nav-how':'Анонімність','nav-adm':'Адмін','nav-set':'Налаш.',
+  'prof-anon':'АНОНІМНО','ver-anon':'АНОНІМНО',
+  'chart-title':'АКТИВНІСТЬ 24Г',
+  'how-hero-title':'100% Анонімно','how-hero-sub':'Ваша особистість математично захищена.',
+  'proof-title':'ДОКАЗ АНОНІМНОСТІ','hash-what':'Що бачить адмін',
+  'apr1k':'Адмін бачить ваше ім\'я','apr2k':'Адмін бачить ваш ID',
+  'apr3k':'Питання прив\'язані до вас','apr4k':'Відповіді доходять','apr5k':'Ваші дані продаються',
+  'draft-lbl':'✏️ ЧЕРНЕТКА ЗБЕРЕЖЕНА','draft-restore-btn':'Відновити',
+  'edit-q-btn':'✏️ Редагувати питання',
+  'how-steps':[
+    {n:'01',t:'Ви пишете питання',d:'Текст вводиться на вашому пристрої. Ваше ім\'я та ID ніяк не передаються.'},
+    {n:'02',t:'ID хешується',d:'Ваш Telegram ID + секретна сіль → BLAKE2b хеш. Незворотньо.'},
+    {n:'03',t:'Тільки хеш в БД',d:'База зберігає хеш + текст. Жодного зв\'язку з вашою особою.'},
+    {n:'04',t:'Адмін відповідає',d:'Адмін бачить лише текст, категорію, теги та час. Ваша особа захищена.'},
+    {n:'05',t:'Відповідь приходить вам',d:'Система доставляє через SSE + Telegram бота без розкриття особи.'},
+  ],
+  'faq':[
+    {q:'Чи може адмін дізнатися хто я?',a:'Ні. Лише текст питання, категорія та час. Ваш ID — незворотній хеш.'},
+    {q:'Як відповідь доходить до мене?',a:'User ID зберігається окремо і використовується ЛИШЕ для доставки. Адмін не має доступу.'},
+    {q:'Що таке SSE в хедері?',a:'Server-Sent Events — пряме підключення до сервера. Ви отримуєте відповіді миттєво, без перевірок.'},
+    {q:'Чи можна редагувати питання?',a:'Так — протягом 2 хвилин після відправки, якщо адмін ще не відповів.'},
+  ]
+},
+en:{
+  'w-sub':'Anonymous Questions','wf1':'Anonymous','wf2':'Instant','wf3':'Secure',
+  'w-enter':'▶ ENTER','sh-ask':'ASK A QUESTION','sh-pill':'ANON',
+  'sh-my':'MY QUESTIONS','sh-how':'HOW IT WORKS','sh-adm':'ADMIN PANEL','sh-set':'SETTINGS',
+  'lbl-cat':'Category','lbl-tags':'Tags (optional)',
+  'cat-other':'Other','cat-pers':'Personal','cat-phil':'Philosophy','cat-hum':'Humor','cat-adv':'Advice',
+  'qt-ph':'Write your anonymous question…','tag-ph':'+ add tag, Enter',
+  'btn-send':'▶ SEND','sent-title':'Sent!','sent-sub':'Sent anonymously.',
+  'btn-another':'+ Another','btn-tomy':'View my questions →',
+  'lbl-pass':'Access password','btn-alog':'▶ ENTER','aerr-txt':'✖ Incorrect password',
+  'a1l':'Today','a2l':'Pending','a3l':'Total','a4l':'Avg time',
+  'hdr-online':'ONLINE','fb-all':'All',
+  'empty-ask':'You haven\'t asked anything yet','wait-txt':'⏳ Awaiting reply…',
+  'sett-lang-hdr':'🌐 LANGUAGE','sett-color-hdr':'🎨 COLOR',
+  'sett-glow-hdr':'✨ GLOW INTENSITY','sett-anim-hdr':'💫 ANIMATION',
+  'sett-notif-hdr':'🔔 NOTIFICATIONS','sett-priv-hdr':'🔒 PRIVACY',
+  'lbl-low':'Low','lbl-hi':'High',
+  'sett-particles':'Particles','sett-particles-ds':'Ambient particles',
+  'sett-breathe':'Breathing','sett-breathe-ds':'UI elements breathe',
+  'sett-scanlines':'Scanlines','sett-scanlines-ds':'Retro CRT overlay',
+  'sett-haptic':'Haptic feedback','sett-haptic-ds':'Vibration on actions',
+  'sett-autodraft':'Auto-draft','sett-autodraft-ds':'Auto-save unfinished questions',
+  'sett-blur':'Blur on switch','sett-blur-ds':'Hide when backgrounded',
+  'sett-hist':'Save history','sett-hist-ds':'Store locally',
+  'nav-ask':'Ask','nav-my':'Answers','nav-how':'Privacy','nav-adm':'Admin','nav-set':'Settings',
+  'prof-anon':'ANONYMOUS','ver-anon':'ANONYMOUS',
+  'chart-title':'24H ACTIVITY',
+  'how-hero-title':'100% Anonymous','how-hero-sub':'Your identity is mathematically protected.',
+  'proof-title':'ANONYMITY PROOF','hash-what':'What admin sees',
+  'apr1k':'Admin sees your name','apr2k':'Admin sees your ID',
+  'apr3k':'Questions linked to you','apr4k':'Replies reach you','apr5k':'Your data sold',
+  'draft-lbl':'✏️ DRAFT SAVED','draft-restore-btn':'Restore',
+  'edit-q-btn':'✏️ Edit question',
+  'how-steps':[
+    {n:'01',t:'You write a question',d:'Text is typed on your device. Name and ID are never transmitted.'},
+    {n:'02',t:'ID is hashed',d:'Your Telegram ID + secret salt → BLAKE2b hash. One-way, irreversible.'},
+    {n:'03',t:'Only hash stored',d:'Database stores hash + text. No link to your real identity.'},
+    {n:'04',t:'Admin replies',d:'Admin sees only text, category, tags and time. Identity fully protected.'},
+    {n:'05',t:'Reply delivered',d:'Delivered via SSE + Telegram bot without revealing your identity.'},
+  ],
+  'faq':[
+    {q:'Can admin find out who I am?',a:'No. They only see question text, category and time. Your ID is an irreversible hash.'},
+    {q:'How does reply reach me?',a:'User ID stored separately, used ONLY for delivery. Admin has no access.'},
+    {q:'What is SSE in the header?',a:'Server-Sent Events — a live connection. You receive replies instantly, no polling.'},
+    {q:'Can I edit my question?',a:'Yes — within 2 minutes of sending, if admin hasn\'t replied yet.'},
+  ]
+},
+ru:{
+  'w-sub':'Анонимный вопрос','wf1':'Анонимно','wf2':'Мгновенно','wf3':'Защищено',
+  'w-enter':'▶ ВОЙТИ','sh-ask':'ЗАДАТЬ ВОПРОС','sh-pill':'АНОН',
+  'sh-my':'МОИ ВОПРОСЫ','sh-how':'КАК ЭТО РАБОТАЕТ','sh-adm':'ПАНЕЛЬ АДМИНА','sh-set':'НАСТРОЙКИ',
+  'lbl-cat':'Категория','lbl-tags':'Теги (необязательно)',
+  'cat-other':'Другое','cat-pers':'Личное','cat-phil':'Философия','cat-hum':'Юмор','cat-adv':'Совет',
+  'qt-ph':'Напишите свой анонимный вопрос…','tag-ph':'+ добавить тег, Enter',
+  'btn-send':'▶ ОТПРАВИТЬ','sent-title':'Отправлено!','sent-sub':'Отправлено анонимно.',
+  'btn-another':'+ Ещё','btn-tomy':'Мои вопросы →',
+  'lbl-pass':'Пароль доступа','btn-alog':'▶ ВОЙТИ','aerr-txt':'✖ Неверный пароль',
+  'a1l':'Сегодня','a2l':'Ожидают','a3l':'Всего','a4l':'Ср. время',
+  'hdr-online':'ОНЛАЙН','fb-all':'Все',
+  'empty-ask':'Вы ещё не задавали вопросов','wait-txt':'⏳ Ожидаем ответ…',
+  'sett-lang-hdr':'🌐 ЯЗЫК','sett-color-hdr':'🎨 ЦВЕТ',
+  'sett-glow-hdr':'✨ ИНТЕНСИВНОСТЬ СВЕЧЕНИЯ','sett-anim-hdr':'💫 АНИМАЦИЯ',
+  'sett-notif-hdr':'🔔 УВЕДОМЛЕНИЯ','sett-priv-hdr':'🔒 ПРИВАТНОСТЬ',
+  'lbl-low':'Слабо','lbl-hi':'Сильно',
+  'sett-particles':'Частицы','sett-particles-ds':'Фоновые частицы',
+  'sett-breathe':'Дыхание','sett-breathe-ds':'Элементы дышат',
+  'sett-scanlines':'Скан-линии','sett-scanlines-ds':'Ретро CRT наложение',
+  'sett-haptic':'Тактильный отклик','sett-haptic-ds':'Вибрация при действиях',
+  'sett-autodraft':'Авто-черновик','sett-autodraft-ds':'Сохранять незавершённые',
+  'sett-blur':'Размытие','sett-blur-ds':'Скрывать при сворачивании',
+  'sett-hist':'История','sett-hist-ds':'Хранить локально',
+  'nav-ask':'Вопросы','nav-my':'Ответы','nav-how':'Анонимность','nav-adm':'Админ','nav-set':'Настр.',
+  'prof-anon':'АНОНИМНО','ver-anon':'АНОНИМНО',
+  'chart-title':'АКТИВНОСТЬ 24Ч',
+  'how-hero-title':'100% Анонимно','how-hero-sub':'Ваша личность математически защищена.',
+  'proof-title':'ДОКАЗАТЕЛЬСТВО','hash-what':'Что видит админ',
+  'apr1k':'Админ видит ваше имя','apr2k':'Админ видит ваш ID',
+  'apr3k':'Вопросы привязаны к вам','apr4k':'Ответы доходят','apr5k':'Данные продаются',
+  'draft-lbl':'✏️ ЧЕРНОВИК СОХРАНЁН','draft-restore-btn':'Восстановить',
+  'edit-q-btn':'✏️ Редактировать',
+  'how-steps':[
+    {n:'01',t:'Вы пишете вопрос',d:'Текст вводится на устройстве. Имя и ID не передаются.'},
+    {n:'02',t:'ID хешируется',d:'Telegram ID + секретная соль → BLAKE2b. Необратимо.'},
+    {n:'03',t:'Только хеш в БД',d:'База хранит хеш + текст. Нет связи с личностью.'},
+    {n:'04',t:'Админ отвечает',d:'Видит только текст, категорию, теги и время.'},
+    {n:'05',t:'Ответ приходит',d:'Доставка через SSE + Telegram бота без раскрытия личности.'},
+  ],
+  'faq':[
+    {q:'Может ли админ узнать кто я?',a:'Нет. Только текст и время. Ваш ID — необратимый хеш.'},
+    {q:'Как ответ дойдёт до меня?',a:'User ID хранится отдельно только для доставки. Админ не имеет доступа.'},
+    {q:'Что такое SSE в хедере?',a:'Server-Sent Events — прямое соединение. Ответы мгновенно, без опросов.'},
+    {q:'Можно ли редактировать вопрос?',a:'Да — в течение 2 минут после отправки, если не ответили.'},
+  ]
+}};
+function tr(k){const d=TR[lang]||TR.en;return d[k]!==undefined?d[k]:TR.en[k]||k}
+
+// ─ Apply translations ─
+function applyTranslations(){
+  const keys=['w-sub','wf1','wf2','wf3','sh-ask','sh-pill','sh-my','sh-how','sh-adm','sh-set',
+    'lbl-cat','lbl-tags','cat-other','cat-pers','cat-phil','cat-hum','cat-adv',
+    'sent-title','sent-sub','btn-another','btn-tomy','lbl-pass','btn-alog',
+    'a1l','a2l','a3l','a4l','hdr-online',
+    'sett-lang-hdr','sett-color-hdr','sett-glow-hdr','sett-anim-hdr','sett-notif-hdr','sett-priv-hdr',
+    'lbl-low','lbl-hi','sett-particles','sett-particles-ds','sett-breathe','sett-breathe-ds',
+    'sett-scanlines','sett-scanlines-ds','sett-haptic','sett-haptic-ds',
+    'sett-autodraft','sett-autodraft-ds','sett-blur','sett-blur-ds','sett-hist','sett-hist-ds',
+    'nav-ask','nav-my','nav-how','nav-adm','nav-set','prof-anon','ver-anon','chart-title',
+    'how-hero-title','how-hero-sub','proof-title','hash-what',
+    'apr1k','apr2k','apr3k','apr4k','apr5k','draft-lbl'];
+  keys.forEach(k=>{const el=document.getElementById(k);if(el)el.textContent=tr(k)});
+  document.getElementById('qt').placeholder=tr('qt-ph');
+  document.getElementById('tag-input').placeholder=tr('tag-ph');
+  document.getElementById('btn-send').textContent=tr('btn-send');
+  document.getElementById('btn-alog').textContent=tr('btn-alog');
+  document.getElementById('aerr').textContent=tr('aerr-txt');
+  document.getElementById('w-enter-btn').textContent=tr('w-enter');
+  document.getElementById('fb-all').textContent=tr('fb-all');
+  document.getElementById('draft-restore-btn').textContent=tr('draft-restore-btn');
+  document.getElementById('btn-edit-q').textContent=tr('edit-q-btn');
+  ['uk','en','ru'].forEach(l=>document.getElementById('lopt-'+l)?.classList.toggle('active',l===lang));
+  renderHowItWorks();
+}
+
+function renderHowItWorks(){
+  const steps=tr('how-steps');
+  document.getElementById('how-steps-container').innerHTML=steps.map(s=>
+    `<div class="how-step"><div class="step-num">${s.n}</div><div class="step-body"><div class="step-title">${s.t}</div><div class="step-desc">${s.d}</div></div></div>`
+  ).join('');
+  const faqs=tr('faq');
+  document.getElementById('faq-container').innerHTML=faqs.map((f,i)=>
+    `<div class="faq-item" id="faq-${i}">
+      <div class="faq-q" onclick="toggleFaq(${i})"><span>${f.q}</span><span class="faq-arrow">▼</span></div>
+      <div class="faq-a">${f.a}</div>
+    </div>`
+  ).join('');
+}
+function toggleFaq(i){document.getElementById('faq-'+i).classList.toggle('open')}
+
+// ─ Lang ─
+function setLang(l){
+  lang=l;localStorage.setItem('sn_lang',l);applyTranslations();
+  const ls=document.getElementById('lang-screen');
+  ls.classList.add('gone');setTimeout(()=>ls.classList.add('hidden'),650);
+  const w=document.getElementById('welcome');w.style.display='flex';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>w.classList.add('show')));
+}
+function changeLang(l){lang=l;localStorage.setItem('sn_lang',l);applyTranslations();haptic();}
+
+// ─ Theme + Glow ─
+const TGLOWS={
+  cyan:{g1:'rgba(0,229,255,V)',g2:'rgba(124,77,232,V2)',bc:'rgba(0,229,255,BC)'},
+  violet:{g1:'rgba(181,107,255,V)',g2:'rgba(255,107,219,V2)',bc:'rgba(181,107,255,BC)'},
+  green:{g1:'rgba(0,255,157,V)',g2:'rgba(0,195,255,V2)',bc:'rgba(0,255,157,BC)'},
+  gold:{g1:'rgba(255,209,102,V)',g2:'rgba(255,159,74,V2)',bc:'rgba(255,209,102,BC)'},
+  red:{g1:'rgba(255,77,109,V)',g2:'rgba(255,140,66,V2)',bc:'rgba(255,77,109,BC)'},
+};
+function setTheme(t){
+  currentTheme=t;localStorage.setItem('sn_theme',t);
+  document.documentElement.setAttribute('data-theme',t);
+  document.querySelectorAll('.th').forEach(el=>el.classList.toggle('active',el.dataset.theme===t));
+  applyGlow(glowLevel);
+}
+function applyGlow(v){
+  glowLevel=v;localStorage.setItem('sn_glow',v);
+  const p=v/100,g1=0.14+p*0.38,g2=0.09+p*0.28,bc=0.14+p*0.17;
+  const tg2=TGLOWS[currentTheme]||TGLOWS.cyan;
+  const r=document.documentElement;
+  r.style.setProperty('--glow1',tg2.g1.replace('V',g1.toFixed(2)).replace('V2',g2.toFixed(2)));
+  r.style.setProperty('--glow2',tg2.g2.replace('V',g2.toFixed(2)).replace('V2',(g2*.7).toFixed(2)));
+  r.style.setProperty('--border-acc',tg2.bc.replace('BC',bc.toFixed(2)));
+  document.getElementById('cvs').style.opacity=0.18+p*0.6;
+  const gr=document.getElementById('glow-range');
+  if(gr)gr.style.background=`linear-gradient(90deg,var(--acc1) ${v}%,rgba(255,255,255,.08) ${v}%)`;
+  document.getElementById('lbl-glow-val').textContent=v+'%';
+}
+function onGlowChange(v){applyGlow(parseInt(v));}
+
+// ─ Settings toggles ─
+function onToggleParticles(on){showParticles=on;localStorage.setItem('sn_particles',on);if(!on)ctx.clearRect(0,0,W,H);}
+function onToggleBreathe(on){
+  showBreathe=on;localStorage.setItem('sn_breathe',on);
+  document.querySelectorAll('.breathing').forEach(el=>{el.style.animationPlayState=on?'running':'paused';});
+}
+function onToggleScan(on){showScan=on;localStorage.setItem('sn_scan',on);document.getElementById('scanlines').style.opacity=on?'1':'0';}
+function onToggleBlur(on){blurOnHide=on;localStorage.setItem('sn_blur',on);}
+
+document.addEventListener('visibilitychange',()=>{
+  if(!blurOnHide)return;
+  const o=document.getElementById('blur-overlay');
+  if(document.hidden)o.classList.add('show');else o.classList.remove('show');
+});
+
+// ─ Canvas ─
+const canvas=document.getElementById('cvs');
+const ctx=canvas.getContext('2d');
+let W,H,pts=[];
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+resize();window.addEventListener('resize',resize);
+function mkPt(){return{x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.26,vy:(Math.random()-.5)*.26,r:Math.random()*1.3+.3,a:Math.random(),da:Math.random()*.006+.002,life:0,maxLife:160+Math.random()*360};}
+for(let i=0;i<52;i++)pts.push(mkPt());
+function getAcc1RGBA(a){
+  const c=getComputedStyle(document.documentElement).getPropertyValue('--acc1').trim()||'#00e5ff';
+  const d=document.createElement('canvas').getContext('2d');d.fillStyle=c;
+  const m=d.fillStyle.match(/\w\w/g);
+  if(m)return `rgba(${parseInt(m[0],16)},${parseInt(m[1],16)},${parseInt(m[2],16)},${a})`;
+  return `rgba(0,229,255,${a})`;
+}
+function drawFrame(){
+  requestAnimationFrame(drawFrame);ctx.clearRect(0,0,W,H);
+  if(!showParticles)return;
+  pts.forEach((p,i)=>{
+    p.x+=p.vx;p.y+=p.vy;p.life++;p.a+=p.da;if(p.a>1||p.a<0)p.da*=-1;
+    if(p.x<-5||p.x>W+5||p.y<-5||p.y>H+5||p.life>p.maxLife)pts[i]=mkPt();
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=getAcc1RGBA(p.a*.42);ctx.fill();
+  });
+  for(let i=0;i<pts.length;i++){for(let j=i+1;j<pts.length;j++){
+    const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
+    if(d<70){ctx.strokeStyle=getAcc1RGBA((1-d/70)*.05);ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.stroke();}
+  }}
+}
+drawFrame();
+
+// ─ Toast ─
+let toastT;
+function toast(msg,dur=2600){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),dur);}
+
+// ─ Haptic ─
+function haptic(t='light'){if(!document.getElementById('tog-haptic')?.checked)return;try{tg?.HapticFeedback?.impactOccurred?.(t);}catch(e){}}
+
+// ─ Navigation ─
+const PAGES={ask:'page-ask',my:'page-my',wall:'page-wall',how:'page-how',adm:'page-adm',set:'page-set'};
+const NAVS={ask:'bnnb-ask',my:'bnnb-my',wall:'bnnb-wall',adm:'bnnb-adm',set:'bnnb-set'};
+function goPage(p){
+  Object.values(PAGES).forEach(id=>document.getElementById(id)?.classList.remove('on'));
+  Object.values(NAVS).forEach(id=>document.getElementById(id)?.classList.remove('on'));
+  document.getElementById(PAGES[p])?.classList.add('on');
+  document.getElementById(NAVS[p])?.classList.add('on');
+  if(p==='my'){document.getElementById('bdg')?.classList.remove('on');loadMyQuestions();}
+  if(p==='wall')loadWall();
+  if(p==='adm'&&aok)loadAdm();
+  if(p==='set')syncSettingsUI();
+  if(p==='how')renderHowItWorks();
+  haptic();
+}
+
+// ─ API ─
+async function api(path,opts={}){
+  const hdrs={'Content-Type':'application/json','X-Telegram-Init-Data':tg?.initData||'',...(opts.headers||{})};
+  if(adminToken&&path.startsWith('/api/admin'))hdrs['X-Admin-Token']=adminToken;
+  const r=await fetch(API+path,{...opts,headers:hdrs});
+  if(r.status===429)throw new Error('rate_limited');
+  return r.json();
+}
+const get=(p,h={})=>api(p,{headers:h});
+const post=(p,d,h={})=>api(p,{method:'POST',body:JSON.stringify(d),headers:h});
+
+// ─ SSE ─
+function connectSSE(){
+  if(sseSource)sseSource.close();
+  const initData=tg?.initData||'';
+  sseSource=new EventSource(API+'/api/sse?X-Telegram-Init-Data='+encodeURIComponent(initData));
+  sseSource.addEventListener('ping',()=>{document.getElementById('hdr-sse').classList.add('live')});
+  sseSource.addEventListener('answer',e=>{
+    const d=JSON.parse(e.data);
+    const i=myQ.findIndex(x=>x.id===d.question_id);
+    if(i!==-1){myQ[i].answer=d.text;myQ[i].answerTs=d.ts*1000;myQ[i].answerNew=true;localStorage.setItem('aQ',JSON.stringify(myQ));}
+    toast('◈ New reply!',4000);haptic('medium');
+    document.getElementById('bdg')?.classList.add('on');
+    if(document.getElementById('page-my').classList.contains('on'))loadMyQuestions();
+  });
+  sseSource.onerror=()=>{
+    document.getElementById('hdr-sse').classList.remove('live');
+    setTimeout(connectSSE,5000);
+  };
+}
+
+// ─ Tags ─
+function renderTags(){
+  const row=document.getElementById('tags-row');
+  const inp=document.getElementById('tag-input');
+  row.innerHTML='';
+  currentTags.forEach((tag,i)=>{
+    const el=document.createElement('span');el.className='tag';
+    el.innerHTML=`${esc(tag)} <span class="tag-x" onclick="removeTag(${i})">×</span>`;
+    row.appendChild(el);
+  });
+  row.appendChild(inp.parentElement||createTagInput());
+}
+function createTagInput(){const w=document.createElement('div');w.className='tag-input-wrap';w.innerHTML=`<input class="tag-input" id="tag-input" placeholder="${tr('tag-ph')}" maxlength="20"/>`;setupTagInput(w.querySelector('input'));return w;}
+function removeTag(i){currentTags.splice(i,1);renderTags();}
+function setupTagInput(inp){
+  if(!inp)return;
+  inp.addEventListener('keydown',e=>{
+    if((e.key==='Enter'||e.key===',')&&inp.value.trim()){
+      e.preventDefault();
+      const tag=inp.value.trim().replace(/[^a-zA-Zа-яА-ЯіІїЇєЄ0-9_-]/g,'');
+      if(tag&&!currentTags.includes(tag)&&currentTags.length<5){currentTags.push(tag);inp.value='';renderTags();}
+      else inp.value='';
+    }
+    if(e.key==='Backspace'&&!inp.value&&currentTags.length){currentTags.pop();renderTags();}
+  });
+}
+
+// ─ Ask form ─
+document.querySelectorAll('.cat').forEach(c=>{c.addEventListener('click',()=>{document.querySelectorAll('.cat').forEach(x=>x.classList.remove('sel'));c.classList.add('sel');selectedCat=c.dataset.cat;haptic();});});
+setupTagInput(document.getElementById('tag-input'));
+
+function goAsp(s){document.querySelectorAll('.asp').forEach(x=>x.classList.remove('on'));document.getElementById('asp-'+s)?.classList.add('on');}
+
+const qt=document.getElementById('qt');
+qt.addEventListener('input',()=>{
+  document.getElementById('cc').textContent=qt.value.length;
+  if(document.getElementById('tog-autodraft')?.checked)scheduleDraft();
+});
+
+// ─ Draft ─
+let draftSaved=null;
+function scheduleDraft(){
+  clearTimeout(draftTimeout);
+  draftTimeout=setTimeout(saveDraft,2000);
+}
+async function saveDraft(){
+  const text=qt.value.trim();
+  try{
+    await post('/api/draft',{text,category:selectedCat,tags:currentTags.join(',')});
+    const lbl=document.getElementById('draft-saved-lbl');
+    lbl.classList.add('show');setTimeout(()=>lbl.classList.remove('show'),2000);
+    draftSaved={text,category:selectedCat,tags:currentTags};
+  }catch(e){}
+}
+function showDraftBanner(draft){
+  if(!draft||!draft.text)return;
+  draftSaved=draft;
+  document.getElementById('draft-preview').textContent=draft.text.substring(0,60)+(draft.text.length>60?'…':'');
+  document.getElementById('draft-banner').classList.add('show');
+  document.getElementById('hdr-draft-btn').classList.add('has');
+}
+function restoreDraft(){
+  if(!draftSaved)return;
+  qt.value=draftSaved.text||'';
+  document.getElementById('cc').textContent=qt.value.length;
+  if(draftSaved.category){
+    selectedCat=draftSaved.category;
+    document.querySelectorAll('.cat').forEach(c=>{c.classList.toggle('sel',c.dataset.cat===selectedCat);});
+  }
+  if(draftSaved.tags){
+    try{currentTags=draftSaved.tags.split(',').filter(Boolean);}catch(e){}
+    renderTags();
+  }
+  document.getElementById('draft-banner').classList.remove('show');
+  document.getElementById('hdr-draft-btn').classList.remove('has');
+  toast('✅ Draft restored');
+  goPage('ask');
+}
+async function discardDraft(){
+  document.getElementById('draft-banner').classList.remove('show');
+  document.getElementById('hdr-draft-btn').classList.remove('has');
+  draftSaved=null;
+  try{await post('/api/draft',{text:''});}catch(e){}
+}
+
+let cdFull=0,cdLeft=0;
+function startCD(secs){
+  cdFull=secs;cdLeft=secs;clearInterval(cdTimer);
+  const fill=document.getElementById('cdf'),btn=document.getElementById('btn-send');
+  btn.disabled=true;
+  cdTimer=setInterval(()=>{
+    cdLeft--;fill.style.width=(cdFull>0?(cdFull-cdLeft)/cdFull*100:0)+'%';
+    if(cdLeft<=0){clearInterval(cdTimer);fill.style.width='0%';btn.disabled=false;btn.textContent=tr('btn-send');}
+    else btn.textContent='⏳ '+cdLeft+'s';
+  },1000);
+}
+
+// Edit timer countdown
+function startEditTimer(deadline){
+  clearInterval(editTimer);
+  const btn=document.getElementById('btn-edit-q');
+  const lbl=document.getElementById('edit-timer');
+  function tick(){
+    const left=deadline-Math.floor(Date.now()/1000);
+    if(left<=0){clearInterval(editTimer);btn.style.display='none';lbl.textContent='';return;}
+    btn.style.display='block';
+    lbl.textContent=`✏️ Edit window: ${left}s`;
+  }
+  tick();editTimer=setInterval(tick,1000);
+}
+
+document.getElementById('btn-send').addEventListener('click',async()=>{
+  const btn=document.getElementById('btn-send'),text=qt.value.trim();
+  if(!text||text.length<3){toast('⚠️ Too short');haptic('warning');return;}
+  btn.disabled=true;btn.textContent='…';
+  try{
+    const r=await post('/api/ask',{text,category:selectedCat,tags:currentTags});
+    if(r.ok){
+      sentQid=r.question_id;editDeadline=r.edit_deadline;
+      if(document.getElementById('tog-hist')?.checked!==false){
+        myQ.unshift({id:r.question_id,text,category:selectedCat,tags:currentTags,ts:Date.now(),answer:null,isNew:true});
+        if(myQ.length>60)myQ=myQ.slice(0,60);localStorage.setItem('aQ',JSON.stringify(myQ));
+      }
+      qt.value='';document.getElementById('cc').textContent='0';currentTags=[];renderTags();
+      goAsp('sent');if(r.cooldown>0)startCD(r.cooldown);
+      startEditTimer(editDeadline);
+      try{tg?.HapticFeedback?.notificationOccurred?.('success');}catch(e){}
+      document.getElementById('btn-edit-q').style.display='block';
+    }else if(r.error==='cooldown'){toast('⏳ '+r.wait+'s');startCD(r.wait);}
+    else if(r.error==='blocked')toast('🚫 Blocked');
+    else toast('❌ '+(r.message||'Error'));
+  }catch(e){toast('❌ '+(e.message==='rate_limited'?'Rate limited':'No connection'));}
+  btn.disabled=false;btn.textContent=tr('btn-send');
+});
+
+document.getElementById('btn-another').addEventListener('click',()=>goAsp('form'));
+document.getElementById('btn-tomy').addEventListener('click',()=>goPage('my'));
+document.getElementById('btn-edit-q').addEventListener('click',async()=>{
+  if(!sentQid||Date.now()/1000>editDeadline){toast('⚠️ Edit window expired');return;}
+  const newText=prompt('Edit your question:',qt.value||document.getElementById('sent-sub').textContent);
+  if(!newText||!newText.trim())return;
+  try{
+    const r=await post('/api/edit/'+sentQid,{text:newText.trim()});
+    if(r.ok){toast('✅ Edited!');const i=myQ.findIndex(x=>x.id===sentQid);if(i!==-1){myQ[i].text=newText.trim();localStorage.setItem('aQ',JSON.stringify(myQ));}}
+    else toast('❌ '+(r.message||'Error'));
+  }catch(e){toast('❌ Error');}
+});
+
+// ─ My Questions ─
+function fmt(ts){try{return new Date(ts).toLocaleString(lang||'en',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});}catch(e){return new Date(ts).toLocaleString();}}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function ej(s){return String(s).replace(/`/g,'\\`').replace(/\$/g,'\\$');}
+
+async function loadMyQuestions(){
+  const l=document.getElementById('mylist');
+  l.innerHTML='<div class="empty"><span class="eic">⏳</span></div>';
+  try{
+    const r=await get('/api/my_questions?page='+myCurrentPage);
+    if(!r.questions||!r.questions.length){l.innerHTML=`<div class="empty"><span class="eic">💭</span>${tr('empty-ask')}</div>`;document.getElementById('my-pager').style.display='none';return;}
+    myQ=r.questions.map(q=>({...q,ts:q.created_at*1000,answer:q.answers?.[q.answers.length-1]?.text||null,answerTs:q.answers?.[q.answers.length-1]?.ts*1000||null,rated:q.rated}));
+    localStorage.setItem('aQ',JSON.stringify(myQ));
+    l.innerHTML=myQ.map(q=>{
+      const tagHtml=q.tags?q.tags.split(',').filter(Boolean).map(t=>`<span class="btag">${esc(t)}</span>`).join(''):'';
+      let h=`<div class="bw"><div class="blb blb-r">#${q.id} · ${fmt(q.ts)}</div>
+        <div class="bub bub-r${q.isNew?' bub-new':''}">
+          <div class="bcat">${esc(q.category)}</div>
+          ${tagHtml?`<div class="btags">${tagHtml}</div>`:''}
+          ${esc(q.text)}<div class="bmeta">${fmt(q.ts)}</div>
+          ${q.read_at?`<div class="bstatus read">◉ ${lang==='uk'?'Прочитано адміном':lang==='ru'?'Прочитано':'Read by admin'}</div>`:`<div class="bstatus pending">◎ ${lang==='uk'?'Очікує':lang==='ru'?'Ожидает':'Pending'}</div>`}
+        </div></div>`;
+      if(q.answers&&q.answers.length){
+        q.answers.forEach((ans,idx)=>{
+          h+=`<div class="bw"><div class="blb">◈ ${fmt(ans.ts*1000)}</div>
+            <div class="bub bub-l${idx===q.answers.length-1&&q.answerNew?' bub-new':''}">
+              ${esc(ans.text)}<div class="bmeta">${fmt(ans.ts*1000)}</div>
+              ${idx===q.answers.length-1&&!q.rated?`<div class="rrow"><button class="rbtn" onclick="rate(${q.id},1,this)">👍</button><button class="rbtn" onclick="rate(${q.id},-1,this)">👎</button></div>`:''}
+            </div></div>`;
+        });
+      }else{h+=`<div class="wait-row">${tr('wait-txt')}</div>`;}
+      return '<div>'+h+'</div><div class="dvd"></div>';
+    }).join('');
+    // Pager
+    const pages=Math.max(1,Math.ceil(r.total/r.per));
+    const pg=document.getElementById('my-pager');
+    pg.style.display=pages>1?'flex':'none';
+    document.getElementById('my-page-info').textContent=myCurrentPage+' / '+pages;
+    document.getElementById('my-prev').disabled=myCurrentPage<=1;
+    document.getElementById('my-next').disabled=myCurrentPage>=pages;
+  }catch(e){
+    // Fallback to localStorage
+    if(!myQ.length){l.innerHTML=`<div class="empty"><span class="eic">💭</span>${tr('empty-ask')}</div>`;return;}
+    renderMyLocal();
+  }
+}
+function renderMyLocal(){
+  const l=document.getElementById('mylist');
+  l.innerHTML=myQ.map(q=>{
+    let h=`<div class="bw"><div class="blb blb-r">#${q.id} · ${fmt(q.ts)}</div>
+      <div class="bub bub-r"><div class="bcat">${esc(q.category||'')}</div>${esc(q.text)}<div class="bmeta">${fmt(q.ts)}</div></div></div>`;
+    if(q.answer)h+=`<div class="bw"><div class="blb">◈ ${fmt(q.answerTs||q.ts)}</div><div class="bub bub-l">${esc(q.answer)}<div class="bmeta">${fmt(q.answerTs||q.ts)}</div></div></div>`;
+    else h+=`<div class="wait-row">${tr('wait-txt')}</div>`;
+    return '<div>'+h+'</div><div class="dvd"></div>';
+  }).join('');
+}
+function myPage(d){myCurrentPage=Math.max(1,myCurrentPage+d);loadMyQuestions();}
+async function rate(id,v,btn){
+  try{await post('/api/rate',{question_id:id,value:v});}catch(e){}
+  const i=myQ.findIndex(x=>x.id===id);if(i!==-1){myQ[i].rated=true;localStorage.setItem('aQ',JSON.stringify(myQ));}
+  toast(v===1?'👍':'👎');btn.closest('.rrow').innerHTML='<span style="font-size:10px;color:var(--muted)">✓</span>';
+}
+
+// ─ Admin ─
+document.getElementById('btn-alog').addEventListener('click',async()=>{
+  const p=document.getElementById('apass').value,err=document.getElementById('aerr');
+  try{
+    const r=await post('/api/admin/login',{password:p});
+    if(r.ok&&r.token){
+      adminToken=r.token;sessionStorage.setItem(ADMIN_PASS_KEY,adminToken);
+      aok=true;err.style.display='none';
+      document.getElementById('alog-wrap').style.display='none';
+      document.getElementById('adm-dash').style.display='block';
+      loadAdm();loadTemplates();toast('✅ Access granted');
+      try{tg?.HapticFeedback?.notificationOccurred?.('success');}catch(e){}
+    }else{
+      err.style.display='block';try{tg?.HapticFeedback?.notificationOccurred?.('error');}catch(e){}
+      document.getElementById('apass').value='';
+      err.style.animation='none';requestAnimationFrame(()=>{err.style.animation='shake .3s ease';});
+    }
+  }catch(e){err.style.display='block';err.textContent='✖ Connection error';}
+});
+document.getElementById('apass').addEventListener('keydown',ev=>{if(ev.key==='Enter')document.getElementById('btn-alog').click();});
+
+async function adminLogout(){
+  try{await post('/api/admin/logout',{},{'X-Admin-Token':adminToken});}catch(e){}
+  adminToken='';sessionStorage.removeItem(ADMIN_PASS_KEY);aok=false;
+  document.getElementById('adm-dash').style.display='none';
+  document.getElementById('alog-wrap').style.display='block';
+  document.getElementById('apass').value='';toast('✅ Logged out');
+}
+
+async function loadAdm(){
+  if(!aok)return;
+  try{
+    const [s,q]=await Promise.all([get('/api/admin/stats'),loadAdmQuestions()]);
+    document.getElementById('a1').textContent=s.questions_today??'—';
+    document.getElementById('a2').textContent=s.pending??'—';
+    document.getElementById('a3').textContent=s.total??'—';
+    const avg=s.avg_response_sec||0;
+    document.getElementById('a4').textContent=avg?Math.floor(avg/60)+'m':'—';
+    renderChart(s.activity||[]);
+    // Wall count badge
+    if(s.wall_count>0){
+      const wallBadge=document.getElementById('wall-count');
+      if(wallBadge)wallBadge.textContent=s.wall_count;
+    }
+  }catch(ex){toast('❌ Load error');}
+}
+
+function renderChart(activity){
+  const bars=document.getElementById('chart-bars');
+  if(!activity.length){bars.innerHTML='<div style="color:var(--muted);font-size:11px;font-family:var(--font-m)">No data</div>';return;}
+  const max=Math.max(...activity.map(a=>a.c),1);
+  bars.innerHTML=activity.map(a=>{
+    const h=Math.max(4,Math.round(a.c/max*100));
+    const time=new Date(a.h*1000).getHours().toString().padStart(2,'0')+':00';
+    return `<div class="chart-bar" style="height:${h}%" title="${time}: ${a.c}"></div>`;
+  }).join('');
+}
+
+function renderCatPills(cats){
+  document.getElementById('cat-pills').innerHTML=cats.map(c=>
+    `<div class="cat-pill">${c.name} <span class="cat-pill-n">${c.count}</span></div>`
+  ).join('');
+}
+
+async function loadAdmQuestions(){
+  const search=admSearch;
+  const cat=af==='all'||af==='starred'?'':af;
+  const starred=af==='starred'?'starred':'';
+  const url=`/api/admin/questions?page=${admCurrentPage}&status=pending${cat?'&category='+encodeURIComponent(cat):''}${starred?'&priority=starred':''}${search?'&q='+encodeURIComponent(search):''}`;
+  const r=await get(url);
+  aqs=r.questions||[];renderAdm(r);return r;
+}
+
+function renderAdm(meta){
+  const l=document.getElementById('adml');
+  if(!aqs.length){l.innerHTML='<div class="empty"><span class="eic">🎉</span>No questions</div>';document.getElementById('adm-pager').style.display='none';return;}
+  l.innerHTML=aqs.map(q=>{
+    const dt=fmt(q.created_at*1000),isN=(Date.now()/1000-q.created_at)<300;
+    const tagHtml=(q.tags||'').split(',').filter(Boolean).map(t=>`<span class="aq-tag">${esc(t)}</span>`).join('');
+    return `<div class="aq${isN?' new':''}${q.priority?' starred':''}">
+      <div class="aq-top">
+        <span class="aq-id">#${q.id} · ${dt}${isN?'<span class="npill">● NEW</span>':''}${q.read_at?'<span class="read-pill">✓ READ</span>':''}</span>
+        <span class="aq-cat">${esc(q.category)}</span>
+      </div>
+      ${tagHtml?`<div class="aq-tags">${tagHtml}</div>`:''}
+      <div class="aq-txt">${esc(q.text)}</div>
+      <div class="aq-act">
+        <button class="aqb re" onclick="openR(${q.id},\`${ej(q.text)}\`,\`${ej(q.anon_id)}\`)">💬 Reply</button>
+        <button class="aqb star" onclick="toggleStar(${q.id},${q.priority?0:1})">${q.priority?'⭐':'☆'}</button>
+        <button class="aqb de" onclick="aDel(${q.id})">🗑</button>
+        <button class="aqb" onclick="aBlk(\`${ej(q.anon_id)}\`,${q.id})">🚫</button>
+      </div></div>`;
+  }).join('');
+  // Mark as read
+  aqs.forEach(q=>{if(!q.read_at)post('/api/admin/mark_read',{question_id:q.id}).catch(()=>{})});
+  // Pager
+  if(meta){
+    const pg=document.getElementById('adm-pager');
+    pg.style.display=meta.pages>1?'flex':'none';
+    document.getElementById('adm-page-info').textContent=admCurrentPage+' / '+meta.pages;
+    document.getElementById('adm-prev').disabled=admCurrentPage<=1;
+    document.getElementById('adm-next').disabled=admCurrentPage>=meta.pages;
+  }
+}
+
+document.querySelectorAll('.fb').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.fb').forEach(x=>x.classList.remove('on'));b.classList.add('on');af=b.dataset.f;admCurrentPage=1;loadAdmQuestions().then(r=>renderAdm(r));
+}));
+
+function debounceSearch(){clearTimeout(searchDebounce);searchDebounce=setTimeout(()=>{admSearch=document.getElementById('adm-search').value.trim();admCurrentPage=1;loadAdmQuestions().then(r=>renderAdm(r));},400);}
+function admPage(d){admCurrentPage=Math.max(1,admCurrentPage+d);loadAdm();}
+
+async function toggleStar(id,val){
+  await post('/api/admin/priority',{question_id:id,starred:!!val});
+  await loadAdmQuestions().then(r=>renderAdm(r));
+}
+
+function openR(id,txt,anonId){
+  rqid=id;
+  document.getElementById('mqid').textContent='#'+id;
+  document.getElementById('mqtxt').textContent=txt;
+  document.getElementById('rtxt').value='';
+  rovPublish=false;
+  updatePubToggle();
+  // Load templates into row
+  const row=document.getElementById('tmpl-row');
+  row.innerHTML=templates.map(t=>`<button class="tmpl-btn" onclick="useTemplate(\`${ej(t.body)}\`)">${esc(t.title)}</button>`).join('');
+  document.getElementById('rov').classList.add('on');
+  document.getElementById('rov').dataset.anonId=anonId;
+}
+function useTemplate(body){document.getElementById('rtxt').value=body;}
+document.getElementById('btn-rclose').addEventListener('click',()=>document.getElementById('rov').classList.remove('on'));
+document.getElementById('rov').addEventListener('click',ev=>{if(ev.target===document.getElementById('rov'))document.getElementById('rov').classList.remove('on');});
+
+let rovPublish=false;
+function togglePublish(){
+  rovPublish=!rovPublish;
+  updatePubToggle();
+  toast(rovPublish?'🌐 Буде публічно':'🔒 Тільки особисто');
+}
+function updatePubToggle(){
+  const btn=document.getElementById('pub-toggle-btn');
+  const lbl=document.getElementById('pub-toggle-lbl');
+  if(!btn)return;
+  if(rovPublish){
+    btn.classList.add('pub');
+    lbl.textContent='🌐 Публічно (всі побачать)';
+  }else{
+    btn.classList.remove('pub');
+    lbl.textContent='🔒 Особисто';
+  }
+}
+
+async function sendReply(extra=false){
+  const txt=document.getElementById('rtxt').value.trim();
+  if(!txt){toast('⚠️ Enter reply');return;}
+  const btn=extra?document.getElementById('btn-rsend-extra'):document.getElementById('btn-rsend');
+  btn.disabled=true;
+  const endpoint=extra?'/api/admin/reply_extra':'/api/admin/reply';
+  const publish_type=rovPublish?'public':'private';
+  try{
+    const r=await post(endpoint,{question_id:rqid,text:txt,publish_type});
+    if(r.ok){
+      toast(publish_type==='public'?'✅ Відправлено публічно!':'✅ Відправлено особисто!');
+      if(!extra){document.getElementById('rov').classList.remove('on');aqs=aqs.filter(q=>q.id!==rqid);renderAdm();}
+      else{document.getElementById('rtxt').value='';}
+      loadAdm();
+    }else toast('❌ '+(r.message||'Error'));
+  }catch(ex){toast('❌ Error');}
+  btn.disabled=false;
+}
+document.getElementById('btn-rsend').addEventListener('click',()=>sendReply(false));
+document.getElementById('btn-rsend-extra').addEventListener('click',()=>sendReply(true));
+
+async function aDel(id){if(!confirm('#'+id+'?'))return;await post('/api/admin/delete',{question_id:id});aqs=aqs.filter(q=>q.id!==id);renderAdm();toast('🗑');}
+async function aBlk(anon_id,id){if(!confirm('Block?'))return;await post('/api/admin/block',{anon_id,question_id:id});aqs=aqs.filter(q=>q.id!==id);renderAdm();toast('🚫');}
+
+// ─ Admin tabs ─
+let currentAdmTab='questions';
+function switchAdmTab(tab){
+  currentAdmTab=tab;
+  document.getElementById('adm-tab-questions').style.display=tab==='questions'?'block':'none';
+  document.getElementById('adm-tab-users').style.display=tab==='users'?'block':'none';
+  document.getElementById('adm-tab-q').classList.toggle('on',tab==='questions');
+  document.getElementById('adm-tab-u').classList.toggle('on',tab==='users');
+  if(tab==='users')loadUsers();
+}
+
+// ─ Users / Dialogs ─
+let currentDialogAnonId='';
+let dialogPublish=false;
+
+async function loadUsers(){
+  const container=document.getElementById('users-list');
+  container.innerHTML='<div class="wait-row">Loading…</div>';
+  try{
+    const r=await get('/api/admin/users');
+    if(!r.users||!r.users.length){container.innerHTML='<div class="empty"><span class="eic">👥</span>Немає користувачів</div>';return;}
+    container.innerHTML=r.users.map(u=>`
+      <div class="aq" onclick="openDialog('${u.anon_id}')" style="cursor:pointer">
+        <div class="aq-top">
+          <div class="aq-id">
+            <span style="font-family:var(--font-m);font-size:10px;color:var(--acc1)">👤 ${u.anon_id.substring(0,12)}…</span>
+            ${u.pending>0?`<span class="npill">${u.pending} нових</span>`:''}
+          </div>
+          <div style="font-size:9px;color:var(--muted);font-family:var(--font-m)">${fmt(u.last_at*1000)}</div>
+        </div>
+        <div style="font-size:11px;color:var(--muted)">💬 ${u.q_count} пит. · ✅ ${u.answered} відп.</div>
+      </div>
+    `).join('');
+  }catch(e){container.innerHTML='<div class="empty">Error</div>';}
+}
+
+async function openDialog(anonId){
+  currentDialogAnonId=anonId;
+  dialogPublish=false;
+  updateDialogPubToggle();
+  document.getElementById('dialog-uid').textContent='👤 '+anonId.substring(0,16)+'…';
+  document.getElementById('dialog-meta').textContent='';
+  document.getElementById('dialog-txt').value='';
+  document.getElementById('dialog-msgs').innerHTML='<div class="wait-row">Loading…</div>';
+  document.getElementById('dialog-ov').classList.add('on');
+  try{
+    const r=await get('/api/admin/dialog/'+anonId);
+    const msgs=document.getElementById('dialog-msgs');
+    msgs.innerHTML='';
+    let msgCount=0;
+    for(const q of r.dialog||[]){
+      // User question
+      const qel=document.createElement('div');
+      qel.className='dmsg dmsg-user';
+      qel.innerHTML=`${esc(q.text)}<div class="dmsg-ts">${fmt(q.created_at*1000)} · #${q.id}</div>`;
+      msgs.appendChild(qel);
+      msgCount++;
+      // Admin answers
+      for(const a of q.answers||[]){
+        const ael=document.createElement('div');
+        ael.className='dmsg dmsg-admin';
+        ael.innerHTML=`${esc(a.text)}<div class="dmsg-ts">${fmt(a.created_at*1000)}</div>${a.publish_type==='public'?'<div class="dmsg-pub">🌐 Публічно</div>':''}`;
+        msgs.appendChild(ael);
+        msgCount++;
+      }
+    }
+    if(!msgCount)msgs.innerHTML='<div class="empty">Немає повідомлень</div>';
+    msgs.scrollTop=msgs.scrollHeight;
+    document.getElementById('dialog-meta').textContent=msgCount+' повід.';
+  }catch(e){document.getElementById('dialog-msgs').innerHTML='<div class="empty">Error</div>';}
+}
+
+function closeDialog(){
+  document.getElementById('dialog-ov').classList.remove('on');
+  currentDialogAnonId='';
+}
+
+function toggleDialogPublish(){
+  dialogPublish=!dialogPublish;
+  updateDialogPubToggle();
+  toast(dialogPublish?'🌐 Буде публічно':'🔒 Тільки особисто');
+}
+function updateDialogPubToggle(){
+  const btn=document.getElementById('dialog-pub-btn');
+  const lbl=document.getElementById('dialog-pub-lbl');
+  if(!btn)return;
+  if(dialogPublish){
+    btn.classList.add('pub');
+    lbl.textContent='🌐 Публічно';
+  }else{
+    btn.classList.remove('pub');
+    lbl.textContent='🔒 Особисто';
+  }
+}
+
+async function sendDialogMsg(){
+  const txt=document.getElementById('dialog-txt').value.trim();
+  if(!txt||!currentDialogAnonId){toast('⚠️ Empty');return;}
+  const btn=document.getElementById('dialog-send-btn');
+  btn.disabled=true;
+  const publish_type=dialogPublish?'public':'private';
+  try{
+    const r=await post('/api/admin/send_to_user',{anon_id:currentDialogAnonId,text:txt,publish_type});
+    if(r.ok){
+      document.getElementById('dialog-txt').value='';
+      toast('✅ Sent!');
+      await openDialog(currentDialogAnonId);
+    }else toast('❌ '+(r.error||'Error'));
+  }catch(e){toast('❌ Error');}
+  btn.disabled=false;
+}
+
+// ─ Public Wall ─
+let wallCurrentPage=1;
+const REACT_EMOJIS=['❤️','🔥','😂','🤯','👏','💔','😮','👀'];
+
+function renderReactions(wallId, reactions, myReaction){
+  const entries=Object.entries(reactions||{}).sort((a,b)=>b[1]-a[1]);
+  return `<div class="wall-reactions" id="wr-${wallId}">
+    ${entries.map(([emoji,cnt])=>`
+      <button class="react-btn${myReaction===emoji?' mine':''}" onclick="doReact(${wallId},'${emoji}')">
+        <span class="react-emoji">${emoji}</span><span class="react-count">${cnt}</span>
+      </button>`).join('')}
+    <button class="react-add" onclick="togglePicker(${wallId},event)">＋</button>
+    <div class="react-picker" id="rp-${wallId}">
+      ${REACT_EMOJIS.map(e=>`<button class="react-picker-btn" onclick="doReact(${wallId},'${e}');closePickers()">${e}</button>`).join('')}
+    </div>
+  </div>`;
+}
+
+function closePickers(){
+  document.querySelectorAll('.react-picker.open').forEach(el=>el.classList.remove('open'));
+}
+function togglePicker(wallId,ev){
+  ev.stopPropagation();
+  const p=document.getElementById('rp-'+wallId);
+  if(!p)return;
+  const wasOpen=p.classList.contains('open');
+  closePickers();
+  if(!wasOpen)p.classList.add('open');
+}
+document.addEventListener('click',closePickers);
+
+async function doReact(wallId, emoji){
+  try{
+    const r=await post('/api/wall/react',{wall_id:wallId,emoji});
+    if(r.ok){
+      const container=document.getElementById('wr-'+wallId);
+      if(container)container.outerHTML=renderReactions(wallId,r.reactions,r.my_reaction);
+    }
+  }catch(e){toast('❌ Помилка реакції');}
+}
+
+async function loadWall(page){
+  if(page!==undefined)wallCurrentPage=page;
+  const container=document.getElementById('wall-list');
+  container.innerHTML='<div class="wait-row">Loading…</div>';
+  try{
+    const r=await get('/api/wall?page='+wallCurrentPage);
+    if(!r.items||!r.items.length){
+      container.innerHTML='<div class="empty"><span class="eic">📢</span>Стінка порожня<br><span style="font-size:11px">Адмін ще не опублікував нічого</span></div>';
+      document.getElementById('wall-pager').style.display='none';
+      return;
+    }
+    container.innerHTML=r.items.map(it=>`
+      <div class="aq" style="margin-bottom:14px">
+        <div class="bw"><div class="blb blb-r">Питання · ${fmt(it.created_at*1000)}</div>
+          <div class="bub bub-r">${esc(it.question_text)}</div></div>
+        <div class="bw"><div class="blb">Відповідь</div>
+          <div class="bub bub-l">${esc(it.answer_text)}</div></div>
+        ${renderReactions(it.id,it.reactions||{},it.my_reaction||null)}
+      </div>`).join('');
+    const pager=document.getElementById('wall-pager');
+    if(r.pages>1){
+      pager.style.display='flex';
+      document.getElementById('wall-page-info').textContent=wallCurrentPage+' / '+r.pages;
+      document.getElementById('wall-prev').disabled=wallCurrentPage<=1;
+      document.getElementById('wall-next').disabled=wallCurrentPage>=r.pages;
+    }else pager.style.display='none';
+  }catch(e){container.innerHTML='<div class="empty">Error</div>';}
+}
+function wallPage(d){loadWall(Math.max(1,wallCurrentPage+d));}
+
+// ─ Export ─
+function exportCSV(){
+  window.open(API+'/api/admin/export?status=all','_blank');
+}
+
+// ─ Templates ─
+async function loadTemplates(){
+  try{const r=await get('/api/admin/templates');templates=r.templates||[];}catch(e){}
+}
+
+// ─ Settings sync ─
+function syncSettingsUI(){
+  const user=tg?.initDataUnsafe?.user;
+  if(user){document.getElementById('prof-nm').textContent=(user.first_name||'')+(user.last_name?' '+user.last_name:'');document.getElementById('prof-id').textContent='ID: '+user.id;}
+  document.getElementById('tog-particles').checked=showParticles;
+  document.getElementById('tog-breathe').checked=showBreathe;
+  document.getElementById('tog-scan').checked=showScan;
+  document.getElementById('tog-blur').checked=blurOnHide;
+  const gr=document.getElementById('glow-range');gr.value=glowLevel;
+  gr.style.background=`linear-gradient(90deg,var(--acc1) ${glowLevel}%,rgba(255,255,255,.08) ${glowLevel}%)`;
+  document.getElementById('lbl-glow-val').textContent=glowLevel+'%';
+  ['uk','en','ru'].forEach(l=>document.getElementById('lopt-'+l)?.classList.toggle('active',l===lang));
+  document.querySelectorAll('.th').forEach(el=>el.classList.toggle('active',el.dataset.theme===currentTheme));
+}
+
+// ─ INIT ─
+function init(){
+  document.documentElement.setAttribute('data-theme',currentTheme);
+  document.querySelectorAll('.th').forEach(el=>el.classList.toggle('active',el.dataset.theme===currentTheme));
+  applyGlow(glowLevel);
+  document.getElementById('scanlines').style.opacity=showScan?'1':'0';
+  if(!showBreathe)document.querySelectorAll('.breathing').forEach(el=>{el.style.animationPlayState='paused';});
+  if(lang)applyTranslations();
+  if(lang){
+    document.getElementById('lang-screen').classList.add('hidden');
+    const w=document.getElementById('welcome');w.style.display='flex';
+    requestAnimationFrame(()=>requestAnimationFrame(()=>w.classList.add('show')));
+  }
+}
+
+document.getElementById('w-enter-btn').addEventListener('click',()=>{
+  const w=document.getElementById('welcome');w.classList.add('gone');
+  setTimeout(async()=>{
+    w.style.display='none';
+    document.getElementById('app').style.display='flex';
+    document.getElementById('bot-nav').classList.add('show');
+    goPage('ask');
+    connectSSE();
+    // Load initial data
+    try{
+      const me=await get('/api/me');
+      if(me.cooldown>0)startCD(me.cooldown);
+      if(me.draft)showDraftBanner(me.draft);
+      // Auto-restore admin session
+      if(adminToken){
+        const r=await post('/api/admin/login',{password:'__token__'}).catch(()=>({}));
+        // Try token verify via stats endpoint
+        try{await get('/api/admin/stats');aok=true;document.getElementById('alog-wrap').style.display='none';document.getElementById('adm-dash').style.display='block';}catch(e){adminToken='';sessionStorage.removeItem(ADMIN_PASS_KEY);}
+      }
+    }catch(e){}
+  },720);
+});
+
+init();
+</script>
+</body>
+</html>
