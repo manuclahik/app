@@ -674,14 +674,14 @@ input[type=range]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;
         <div class="psych-cloud-inner">
           <div class="psych-cloud-top">
             <div class="psych-avatar">🧠</div>
-            <div class="psych-badge">ПСИХОЛОГ · МАГІСТР</div>
+            <div class="psych-badge" id="psych-badge">ПСИХОЛОГ · МАГІСТР</div>
           </div>
-          <div class="psych-text">
+          <div class="psych-text" id="psych-text">
             Я практикуючий психолог, закінчив магістратуру в польському університеті. Окрім звичайних питань — звертайтесь із особистими. Тут все анонімно, відповідаю по можливості 🙌
           </div>
           <div class="psych-footer">
-            <span class="psych-anon-badge">🎭 Повністю анонімно</span>
-            <span class="psych-link">Як це працює →</span>
+            <span class="psych-anon-badge" id="psych-anon-badge">🎭 Повністю анонімно</span>
+            <span class="psych-link" id="psych-link">Як це працює →</span>
           </div>
         </div>
       </div>
@@ -824,16 +824,16 @@ input[type=range]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;
       <!-- Hero -->
       <div class="how-hero">
         <div class="how-orb">🕵️</div>
-        <div class="how-title">Справді анонімно</div>
-        <div class="how-sub">Твоя особистість математично захищена. Ось докази.</div>
+        <div class="how-title" id="faq-hero-title">Справді анонімно</div>
+        <div class="how-sub" id="faq-hero-sub">Твоя особистість математично захищена. Ось докази.</div>
       </div>
 
       <div style="margin-bottom:18px">
-        <div class="anon-proof-title" style="margin-bottom:12px">📨 ЩО ВІДБУВАЄТЬСЯ КОЛИ ТИ НАДСИЛАЄШ ПИТАННЯ</div>
+        <div class="anon-proof-title" id="faq-steps-title" style="margin-bottom:12px">📨 ЩО ВІДБУВАЄТЬСЯ КОЛИ ТИ НАДСИЛАЄШ ПИТАННЯ</div>
         <div style="display:flex;flex-direction:column;gap:10px">
           <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:14px 16px">
-            <div style="font-size:11px;color:var(--acc1);font-family:var(--font-m);letter-spacing:1.5px;margin-bottom:6px">КРОК 1 — ХЕШУВАННЯ</div>
-            <div style="font-size:13px;color:var(--text);line-height:1.5">Твій Telegram ID перетворюється на незворотній хеш (BLAKE2b + секретна сіль). Навіть розробник не може дізнатись твій ID з цього хешу.</div>
+            <div style="font-size:11px;color:var(--acc1);font-family:var(--font-m);letter-spacing:1.5px;margin-bottom:6px" id="faq-s1-title">КРОК 1 — ХЕШУВАННЯ</div>
+            <div style="font-size:13px;color:var(--text);line-height:1.5" id="faq-s1-desc">Твій Telegram ID перетворюється на незворотній хеш (BLAKE2b + секретна сіль). Навіть розробник не може дізнатись твій ID з цього хешу.</div>
             <div style="margin-top:10px;background:rgba(0,0,0,0.3);border-radius:8px;padding:10px;font-family:monospace;font-size:11px">
               <span style="color:var(--muted)">Твій ID:</span> <span style="color:var(--text)">123456789</span><br>
               <span style="color:var(--muted)">↓ BLAKE2b + сіль</span><br>
@@ -841,12 +841,12 @@ input[type=range]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;
             </div>
           </div>
           <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:14px 16px">
-            <div style="font-size:11px;color:var(--acc1);font-family:var(--font-m);letter-spacing:1.5px;margin-bottom:6px">КРОК 2 — ЩО ЗБЕРІГАЄТЬСЯ В БАЗІ</div>
-            <div style="font-size:13px;color:var(--text);line-height:1.5">В базі даних зберігається: текст питання, час, хеш (не твій ID), категорія. Твій справжній Telegram ID зберігається <em>окремо</em> — тільки щоб доставити тобі відповідь.</div>
+            <div style="font-size:11px;color:var(--acc1);font-family:var(--font-m);letter-spacing:1.5px;margin-bottom:6px" id="faq-s2-title">КРОК 2 — ЩО ЗБЕРІГАЄТЬСЯ В БАЗІ</div>
+            <div style="font-size:13px;color:var(--text);line-height:1.5" id="faq-s2-desc">В базі даних зберігається: текст питання, час, хеш (не твій ID), категорія. Твій справжній Telegram ID зберігається <em>окремо</em> — тільки щоб доставити тобі відповідь.</div>
           </div>
           <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:14px 16px">
-            <div style="font-size:11px;color:var(--acc1);font-family:var(--font-m);letter-spacing:1.5px;margin-bottom:6px">КРОК 3 — ЩО БАЧИТЬ АДМІН</div>
-            <div style="font-size:13px;color:var(--text);line-height:1.5">Адмін бачить <strong>тільки</strong>: текст питання, категорію, час і хеш. Ні імені, ні юзернейму, ні ID — нічого особистого.</div>
+            <div style="font-size:11px;color:var(--acc1);font-family:var(--font-m);letter-spacing:1.5px;margin-bottom:6px" id="faq-s3-title">КРОК 3 — ЩО БАЧИТЬ АДМІН</div>
+            <div style="font-size:13px;color:var(--text);line-height:1.5" id="faq-s3-desc">Адмін бачить <strong>тільки</strong>: текст питання, категорію, час і хеш. Ні імені, ні юзернейму, ні ID — нічого особистого.</div>
             <div style="margin-top:10px;background:rgba(0,0,0,0.3);border-radius:8px;padding:10px;font-size:12px">
               <div style="color:var(--muted);margin-bottom:4px">Вигляд питання для адміна:</div>
               <div style="color:var(--text)">📩 Текст питання...</div>
@@ -854,40 +854,40 @@ input[type=range]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;
             </div>
           </div>
           <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:14px 16px">
-            <div style="font-size:11px;color:var(--success);font-family:var(--font-m);letter-spacing:1.5px;margin-bottom:6px">КРОК 4 — ДОСТАВКА ВІДПОВІДІ</div>
-            <div style="font-size:13px;color:var(--text);line-height:1.5">Коли адмін відповідає — сервер сам знаходить твій ID і надсилає відповідь через бота. Адмін цього процесу не бачить і не контролює.</div>
+            <div style="font-size:11px;color:var(--success);font-family:var(--font-m);letter-spacing:1.5px;margin-bottom:6px" id="faq-s4-title">КРОК 4 — ДОСТАВКА ВІДПОВІДІ</div>
+            <div style="font-size:13px;color:var(--text);line-height:1.5" id="faq-s4-desc">Коли адмін відповідає — сервер сам знаходить твій ID і надсилає відповідь через бота. Адмін цього процесу не бачить і не контролює.</div>
           </div>
         </div>
       </div>
 
       <div class="anon-proof">
-        <div class="anon-proof-title">✅ ГАРАНТІЇ АНОНІМНОСТІ</div>
-        <div class="anon-proof-row"><span class="apr-key">Адмін бачить твоє ім'я</span><span class="apr-val" style="color:#ff4d6d">✗ НІКОЛИ</span></div>
-        <div class="anon-proof-row"><span class="apr-key">Адмін бачить твій ID</span><span class="apr-val" style="color:#ff4d6d">✗ НІКОЛИ</span></div>
-        <div class="anon-proof-row"><span class="apr-key">Питання прив'язані до тебе</span><span class="apr-val" style="color:#ff4d6d">✗ НІКОЛИ</span></div>
-        <div class="anon-proof-row"><span class="apr-key">Відповідь доходить до тебе</span><span class="apr-val" style="color:var(--success)">✓ ЗАВЖДИ</span></div>
-        <div class="anon-proof-row"><span class="apr-key">Твої дані передаються третім</span><span class="apr-val" style="color:#ff4d6d">✗ НІКОЛИ</span></div>
-        <div class="anon-proof-row"><span class="apr-key">Хеш можна розшифрувати</span><span class="apr-val" style="color:#ff4d6d">✗ НЕМОЖЛИВО</span></div>
+        <div class="anon-proof-title" id="faq-guar-title">✅ ГАРАНТІЇ АНОНІМНОСТІ</div>
+        <div class="anon-proof-row"><span class="apr-key" id="faq-g1k">Адмін бачить твоє ім'я</span><span class="apr-val" id="faq-g1v" style="color:#ff4d6d">✗ НІКОЛИ</span></div>
+        <div class="anon-proof-row"><span class="apr-key" id="faq-g2k">Адмін бачить твій ID</span><span class="apr-val" id="faq-g2v" style="color:#ff4d6d">✗ НІКОЛИ</span></div>
+        <div class="anon-proof-row"><span class="apr-key" id="faq-g3k">Питання прив'язані до тебе</span><span class="apr-val" id="faq-g3v" style="color:#ff4d6d">✗ НІКОЛИ</span></div>
+        <div class="anon-proof-row"><span class="apr-key" id="faq-g4k">Відповідь доходить до тебе</span><span class="apr-val" id="faq-g4v" style="color:var(--success)">✓ ЗАВЖДИ</span></div>
+        <div class="anon-proof-row"><span class="apr-key" id="faq-g5k">Твої дані передаються третім</span><span class="apr-val" id="faq-g5v" style="color:#ff4d6d">✗ НІКОЛИ</span></div>
+        <div class="anon-proof-row"><span class="apr-key" id="faq-g6k">Хеш можна розшифрувати</span><span class="apr-val" id="faq-g6v" style="color:#ff4d6d">✗ НЕМОЖЛИВО</span></div>
       </div>
 
       <div style="margin-top:16px;margin-bottom:16px">
-        <div class="anon-proof-title" style="margin-bottom:12px">❓ ЧАСТІ ПИТАННЯ</div>
+        <div class="anon-proof-title" id="faq-qa-title" style="margin-bottom:12px">❓ ЧАСТІ ПИТАННЯ</div>
         <div style="display:flex;flex-direction:column;gap:8px">
           <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:14px 16px">
-            <div style="font-size:13px;font-weight:600;color:var(--acc1);margin-bottom:6px">Чи може адмін дізнатись, що це я написав?</div>
-            <div style="font-size:13px;color:var(--text);line-height:1.5">Ні. Адмін бачить лише хеш — набір символів без жодного зв'язку з твоїм обліковим записом. Навіть якщо ти напишеш 10 питань — адмін не знатиме, що вони від однієї людини.</div>
+            <div style="font-size:13px;font-weight:600;color:var(--acc1);margin-bottom:6px" id="faq-q1">Чи може адмін дізнатись, що це я написав?</div>
+            <div style="font-size:13px;color:var(--text);line-height:1.5" id="faq-a1">Ні. Адмін бачить лише хеш — набір символів без жодного зв'язку з твоїм обліковим записом. Навіть якщо ти напишеш 10 питань — адмін не знатиме, що вони від однієї людини.</div>
           </div>
           <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:14px 16px">
-            <div style="font-size:13px;font-weight:600;color:var(--acc1);margin-bottom:6px">Як відповідь знаходить мене?</div>
-            <div style="font-size:13px;color:var(--text);line-height:1.5">Твій Telegram ID зберігається в окремій захищеній таблиці. Сервер автоматично надсилає відповідь через бота. Адмін не бачить і не вводить нічого пов'язаного з тобою.</div>
+            <div style="font-size:13px;font-weight:600;color:var(--acc1);margin-bottom:6px" id="faq-q2">Як відповідь знаходить мене?</div>
+            <div style="font-size:13px;color:var(--text);line-height:1.5" id="faq-a2">Твій Telegram ID зберігається в окремій захищеній таблиці. Сервер автоматично надсилає відповідь через бота. Адмін не бачить і не вводить нічого пов'язаного з тобою.</div>
           </div>
           <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:14px 16px">
-            <div style="font-size:13px;font-weight:600;color:var(--acc1);margin-bottom:6px">Що таке BLAKE2b?</div>
-            <div style="font-size:13px;color:var(--text);line-height:1.5">Це криптографічна хеш-функція — як одностороннє шифрування. З хешу неможливо отримати оригінальні дані. Використовується в банківських системах і блокчейні.</div>
+            <div style="font-size:13px;font-weight:600;color:var(--acc1);margin-bottom:6px" id="faq-q3">Що таке BLAKE2b?</div>
+            <div style="font-size:13px;color:var(--text);line-height:1.5" id="faq-a3">Це криптографічна хеш-функція — як одностороннє шифрування. З хешу неможливо отримати оригінальні дані. Використовується в банківських системах і блокчейні.</div>
           </div>
           <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:14px 16px">
-            <div style="font-size:13px;font-weight:600;color:var(--acc1);margin-bottom:6px">Чи можу я редагувати питання після відправки?</div>
-            <div style="font-size:13px;color:var(--text);line-height:1.5">Так — протягом 2 хвилин після надсилання, якщо адмін ще не відповів.</div>
+            <div style="font-size:13px;font-weight:600;color:var(--acc1);margin-bottom:6px" id="faq-q4">Чи можу я редагувати питання після відправки?</div>
+            <div style="font-size:13px;color:var(--text);line-height:1.5" id="faq-a4">Так — протягом 2 хвилин після надсилання, якщо адмін ще не відповів.</div>
           </div>
         </div>
       </div>
@@ -1123,6 +1123,37 @@ uk:{
   'apr3k':'Питання прив\'язані до вас','apr4k':'Відповіді доходять','apr5k':'Ваші дані продаються',
   'draft-lbl':'✏️ ЧЕРНЕТКА ЗБЕРЕЖЕНА','draft-restore-btn':'Відновити',
   'edit-q-btn':'✏️ Редагувати питання',
+  'psych-badge':'ПСИХОЛОГ · МАГІСТР',
+  'psych-text':'Я практикуючий психолог, закінчив магістратуру в польському університеті. Окрім звичайних питань — звертайтесь із особистими. Тут все анонімно, відповідаю по можливості 🙌',
+  'psych-anon-badge':'🎭 Повністю анонімно',
+  'psych-link':'Як це працює →',
+  'faq-hero-title':'Справді анонімно',
+  'faq-hero-sub':'Твоя особистість математично захищена. Ось докази.',
+  'faq-steps-title':'📨 ЩО ВІДБУВАЄТЬСЯ КОЛИ ТИ НАДСИЛАЄШ ПИТАННЯ',
+  'faq-s1-title':'КРОК 1 — ХЕШУВАННЯ',
+  'faq-s1-desc':'Твій Telegram ID перетворюється на незворотній хеш (BLAKE2b + секретна сіль). Навіть розробник не може дізнатись твій ID з цього хешу.',
+  'faq-s2-title':'КРОК 2 — ЩО ЗБЕРІГАЄТЬСЯ В БАЗІ',
+  'faq-s2-desc':'В базі даних зберігається: текст питання, час, хеш (не твій ID), категорія. Твій справжній Telegram ID зберігається окремо — тільки щоб доставити тобі відповідь.',
+  'faq-s3-title':'КРОК 3 — ЩО БАЧИТЬ АДМІН',
+  'faq-s3-desc':'Адмін бачить тільки: текст питання, категорію, час і хеш. Ні імені, ні юзернейму, ні ID — нічого особистого.',
+  'faq-s4-title':'КРОК 4 — ДОСТАВКА ВІДПОВІДІ',
+  'faq-s4-desc':'Коли адмін відповідає — сервер сам знаходить твій ID і надсилає відповідь через бота. Адмін цього процесу не бачить і не контролює.',
+  'faq-guar-title':'✅ ГАРАНТІЇ АНОНІМНОСТІ',
+  'faq-g1k':'Адмін бачить твоє ім\'я','faq-g1v':'✗ НІКОЛИ',
+  'faq-g2k':'Адмін бачить твій ID','faq-g2v':'✗ НІКОЛИ',
+  'faq-g3k':'Питання прив\'язані до тебе','faq-g3v':'✗ НІКОЛИ',
+  'faq-g4k':'Відповідь доходить до тебе','faq-g4v':'✓ ЗАВЖДИ',
+  'faq-g5k':'Твої дані передаються третім','faq-g5v':'✗ НІКОЛИ',
+  'faq-g6k':'Хеш можна розшифрувати','faq-g6v':'✗ НЕМОЖЛИВО',
+  'faq-qa-title':'❓ ЧАСТІ ПИТАННЯ',
+  'faq-q1':'Чи може адмін дізнатись, що це я написав?',
+  'faq-a1':'Ні. Адмін бачить лише хеш — набір символів без жодного зв\'язку з твоїм обліковим записом. Навіть якщо ти напишеш 10 питань — адмін не знатиме, що вони від однієї людини.',
+  'faq-q2':'Як відповідь знаходить мене?',
+  'faq-a2':'Твій Telegram ID зберігається в окремій захищеній таблиці. Сервер автоматично надсилає відповідь через бота. Адмін не бачить і не вводить нічого пов\'язаного з тобою.',
+  'faq-q3':'Що таке BLAKE2b?',
+  'faq-a3':'Це криптографічна хеш-функція — як одностороннє шифрування. З хешу неможливо отримати оригінальні дані. Використовується в банківських системах і блокчейні.',
+  'faq-q4':'Чи можу я редагувати питання після відправки?',
+  'faq-a4':'Так — протягом 2 хвилин після надсилання, якщо адмін ще не відповів.',
   'how-steps':[
     {n:'01',t:'Ви пишете питання',d:'Текст вводиться на вашому пристрої. Ваше ім\'я та ID ніяк не передаються.'},
     {n:'02',t:'ID хешується',d:'Ваш Telegram ID + секретна сіль → BLAKE2b хеш. Незворотньо.'},
@@ -1170,6 +1201,37 @@ en:{
   'apr3k':'Questions linked to you','apr4k':'Replies reach you','apr5k':'Your data sold',
   'draft-lbl':'✏️ DRAFT SAVED','draft-restore-btn':'Restore',
   'edit-q-btn':'✏️ Edit question',
+  'psych-badge':'PSYCHOLOGIST · MASTER\'S DEGREE',
+  'psych-text':'I\'m a practicing psychologist with a Master\'s degree from a Polish university. Besides general questions — feel free to reach out with personal ones. Everything here is anonymous, I reply when I can 🙌',
+  'psych-anon-badge':'🎭 Fully anonymous',
+  'psych-link':'How it works →',
+  'faq-hero-title':'Truly anonymous',
+  'faq-hero-sub':'Your identity is mathematically protected. Here\'s the proof.',
+  'faq-steps-title':'📨 WHAT HAPPENS WHEN YOU SEND A QUESTION',
+  'faq-s1-title':'STEP 1 — HASHING',
+  'faq-s1-desc':'Your Telegram ID is converted into an irreversible hash (BLAKE2b + secret salt). Even the developer cannot find out your ID from this hash.',
+  'faq-s2-title':'STEP 2 — WHAT IS STORED',
+  'faq-s2-desc':'The database stores: question text, time, hash (not your ID), category. Your real Telegram ID is stored separately — only to deliver the reply to you.',
+  'faq-s3-title':'STEP 3 — WHAT ADMIN SEES',
+  'faq-s3-desc':'Admin sees only: question text, category, time and hash. No name, no username, no ID — nothing personal.',
+  'faq-s4-title':'STEP 4 — REPLY DELIVERY',
+  'faq-s4-desc':'When admin replies — the server finds your ID and sends the reply via bot. Admin does not see or control this process.',
+  'faq-guar-title':'✅ ANONYMITY GUARANTEES',
+  'faq-g1k':'Admin sees your name','faq-g1v':'✗ NEVER',
+  'faq-g2k':'Admin sees your ID','faq-g2v':'✗ NEVER',
+  'faq-g3k':'Questions linked to you','faq-g3v':'✗ NEVER',
+  'faq-g4k':'Reply reaches you','faq-g4v':'✓ ALWAYS',
+  'faq-g5k':'Your data shared with others','faq-g5v':'✗ NEVER',
+  'faq-g6k':'Hash can be decrypted','faq-g6v':'✗ IMPOSSIBLE',
+  'faq-qa-title':'❓ FREQUENTLY ASKED',
+  'faq-q1':'Can admin find out it was me who wrote?',
+  'faq-a1':'No. Admin only sees a hash — a string of characters with no connection to your account. Even if you send 10 questions, admin won\'t know they\'re from the same person.',
+  'faq-q2':'How does the reply find me?',
+  'faq-a2':'Your Telegram ID is stored in a separate secure table. The server automatically sends the reply via bot. Admin doesn\'t see or input anything related to you.',
+  'faq-q3':'What is BLAKE2b?',
+  'faq-a3':'A cryptographic hash function — like one-way encryption. It\'s impossible to recover the original data from a hash. Used in banking systems and blockchain.',
+  'faq-q4':'Can I edit my question after sending?',
+  'faq-a4':'Yes — within 2 minutes of sending, if admin hasn\'t replied yet.',
   'how-steps':[
     {n:'01',t:'You write a question',d:'Text is typed on your device. Name and ID are never transmitted.'},
     {n:'02',t:'ID is hashed',d:'Your Telegram ID + secret salt → BLAKE2b hash. One-way, irreversible.'},
@@ -1217,6 +1279,37 @@ ru:{
   'apr3k':'Вопросы привязаны к вам','apr4k':'Ответы доходят','apr5k':'Данные продаются',
   'draft-lbl':'✏️ ЧЕРНОВИК СОХРАНЁН','draft-restore-btn':'Восстановить',
   'edit-q-btn':'✏️ Редактировать',
+  'psych-badge':'ПСИХОЛОГ · МАГИСТР',
+  'psych-text':'Я практикующий психолог, окончил магистратуру в польском университете. Помимо обычных вопросов — обращайтесь с личными. Здесь всё анонимно, отвечаю по возможности 🙌',
+  'psych-anon-badge':'🎭 Полностью анонимно',
+  'psych-link':'Как это работает →',
+  'faq-hero-title':'По-настоящему анонимно',
+  'faq-hero-sub':'Ваша личность математически защищена. Вот доказательства.',
+  'faq-steps-title':'📨 ЧТО ПРОИСХОДИТ КОГДА ВЫ ОТПРАВЛЯЕТЕ ВОПРОС',
+  'faq-s1-title':'ШАГ 1 — ХЕШИРОВАНИЕ',
+  'faq-s1-desc':'Ваш Telegram ID преобразуется в необратимый хеш (BLAKE2b + секретная соль). Даже разработчик не может узнать ваш ID из этого хеша.',
+  'faq-s2-title':'ШАГ 2 — ЧТО ХРАНИТСЯ В БАЗЕ',
+  'faq-s2-desc':'В базе хранится: текст вопроса, время, хеш (не ваш ID), категория. Ваш настоящий Telegram ID хранится отдельно — только чтобы доставить вам ответ.',
+  'faq-s3-title':'ШАГ 3 — ЧТО ВИДИТ АДМИН',
+  'faq-s3-desc':'Админ видит только: текст вопроса, категорию, время и хеш. Никакого имени, юзернейма или ID — ничего личного.',
+  'faq-s4-title':'ШАГ 4 — ДОСТАВКА ОТВЕТА',
+  'faq-s4-desc':'Когда админ отвечает — сервер сам находит ваш ID и отправляет ответ через бота. Админ этот процесс не видит и не контролирует.',
+  'faq-guar-title':'✅ ГАРАНТИИ АНОНИМНОСТИ',
+  'faq-g1k':'Админ видит ваше имя','faq-g1v':'✗ НИКОГДА',
+  'faq-g2k':'Админ видит ваш ID','faq-g2v':'✗ НИКОГДА',
+  'faq-g3k':'Вопросы привязаны к вам','faq-g3v':'✗ НИКОГДА',
+  'faq-g4k':'Ответ доходит до вас','faq-g4v':'✓ ВСЕГДА',
+  'faq-g5k':'Данные передаются третьим','faq-g5v':'✗ НИКОГДА',
+  'faq-g6k':'Хеш можно расшифровать','faq-g6v':'✗ НЕВОЗМОЖНО',
+  'faq-qa-title':'❓ ЧАСТЫЕ ВОПРОСЫ',
+  'faq-q1':'Может ли админ узнать, что это я написал?',
+  'faq-a1':'Нет. Админ видит только хеш — строку символов без связи с вашим аккаунтом. Даже если написать 10 вопросов — админ не узнает, что они от одного человека.',
+  'faq-q2':'Как ответ находит меня?',
+  'faq-a2':'Ваш Telegram ID хранится в отдельной защищённой таблице. Сервер автоматически отправляет ответ через бота. Админ ничего связанного с вами не видит и не вводит.',
+  'faq-q3':'Что такое BLAKE2b?',
+  'faq-a3':'Криптографическая хеш-функция — как одностороннее шифрование. Из хеша невозможно восстановить исходные данные. Используется в банковских системах и блокчейне.',
+  'faq-q4':'Можно ли редактировать вопрос после отправки?',
+  'faq-a4':'Да — в течение 2 минут после отправки, если админ ещё не ответил.',
   'how-steps':[
     {n:'01',t:'Вы пишете вопрос',d:'Текст вводится на устройстве. Имя и ID не передаются.'},
     {n:'02',t:'ID хешируется',d:'Telegram ID + секретная соль → BLAKE2b. Необратимо.'},
@@ -1245,7 +1338,16 @@ function applyTranslations(){
     'sett-autodraft','sett-autodraft-ds','sett-blur','sett-blur-ds','sett-hist','sett-hist-ds',
     'nav-ask','nav-my','nav-how','nav-adm','nav-set','prof-anon','ver-anon','chart-title',
     'how-hero-title','how-hero-sub','proof-title','hash-what',
-    'apr1k','apr2k','apr3k','apr4k','apr5k','draft-lbl'];
+    'apr1k','apr2k','apr3k','apr4k','apr5k','draft-lbl',
+    'psych-badge','psych-text','psych-anon-badge','psych-link',
+    'faq-hero-title','faq-hero-sub','faq-steps-title',
+    'faq-s1-title','faq-s1-desc','faq-s2-title','faq-s2-desc',
+    'faq-s3-title','faq-s3-desc','faq-s4-title','faq-s4-desc',
+    'faq-guar-title',
+    'faq-g1k','faq-g1v','faq-g2k','faq-g2v','faq-g3k','faq-g3v',
+    'faq-g4k','faq-g4v','faq-g5k','faq-g5v','faq-g6k','faq-g6v',
+    'faq-qa-title',
+    'faq-q1','faq-a1','faq-q2','faq-a2','faq-q3','faq-a3','faq-q4','faq-a4'];
   keys.forEach(k=>{const el=document.getElementById(k);if(el)el.textContent=tr(k)});
   document.getElementById('qt').placeholder=tr('qt-ph');
   document.getElementById('tag-input').placeholder=tr('tag-ph');
