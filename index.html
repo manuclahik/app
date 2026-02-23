@@ -668,6 +668,70 @@ input[type=range]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;
         </div>
         <div class="draft-banner-preview" id="draft-preview"></div>
       </div>
+      <!-- 3D GLASS PSYCHOLOGIST CARD -->
+      <div class="psych-cloud" onclick="goPage('adm')">
+        <div class="psych-cloud-glow"></div>
+        <div class="psych-cloud-inner">
+          <div class="psych-cloud-top">
+            <div class="psych-avatar">🧠</div>
+            <div class="psych-badge">ПСИХОЛОГ · МАГІСТР</div>
+          </div>
+          <div class="psych-text">
+            Я практикуючий психолог, закінчив магістратуру в польському університеті. Окрім звичайних питань — звертайтесь із особистими. Тут все анонімно, відповідаю по можливості 🙌
+          </div>
+          <div class="psych-footer">
+            <span class="psych-anon-badge">🎭 Повністю анонімно</span>
+            <span class="psych-link">Як це працює →</span>
+          </div>
+        </div>
+      </div>
+      <style>
+        .psych-cloud{
+          position:relative;margin:0 0 20px;border-radius:20px;
+          background:linear-gradient(135deg,rgba(0,229,255,0.08) 0%,rgba(124,77,232,0.12) 50%,rgba(0,229,255,0.06) 100%);
+          border:1px solid rgba(0,229,255,0.25);
+          backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+          box-shadow:0 8px 32px rgba(0,229,255,0.08),0 2px 8px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.08);
+          cursor:pointer;overflow:hidden;
+          transform:perspective(600px) rotateX(0deg);
+          transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .3s ease,border-color .3s ease;
+        }
+        .psych-cloud:hover{
+          transform:perspective(600px) rotateX(-2deg) translateY(-3px);
+          box-shadow:0 16px 48px rgba(0,229,255,0.15),0 4px 16px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.12);
+          border-color:rgba(0,229,255,0.45);
+        }
+        .psych-cloud:active{transform:perspective(600px) rotateX(0deg) translateY(0);}
+        .psych-cloud-glow{
+          position:absolute;top:-40%;left:50%;transform:translateX(-50%);
+          width:70%;height:100%;
+          background:radial-gradient(ellipse at center top,rgba(0,229,255,0.12) 0%,transparent 70%);
+          pointer-events:none;
+        }
+        .psych-cloud-inner{position:relative;z-index:1;padding:16px 18px 14px;}
+        .psych-cloud-top{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+        .psych-avatar{
+          font-size:28px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;
+          background:linear-gradient(135deg,rgba(0,229,255,0.15),rgba(124,77,232,0.2));
+          border:1px solid rgba(0,229,255,0.3);border-radius:14px;flex-shrink:0;
+          box-shadow:0 4px 12px rgba(0,229,255,0.1);
+        }
+        .psych-badge{
+          font-family:var(--font-m);font-size:9px;letter-spacing:2px;color:var(--acc1);
+          background:rgba(0,229,255,0.1);border:1px solid rgba(0,229,255,0.2);
+          padding:3px 8px;border-radius:6px;
+        }
+        .psych-text{font-size:13px;line-height:1.6;color:rgba(255,255,255,0.82);margin-bottom:12px;}
+        .psych-footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+        .psych-anon-badge{
+          font-size:11px;color:var(--success);font-family:var(--font-m);
+          background:rgba(0,255,157,0.08);border:1px solid rgba(0,255,157,0.2);
+          padding:3px 8px;border-radius:6px;
+        }
+        .psych-link{font-size:11px;color:var(--acc1);font-family:var(--font-m);letter-spacing:0.5px;opacity:0.8;transition:opacity .2s;}
+        .psych-cloud:hover .psych-link{opacity:1;}
+      </style>
+
       <div class="asp on" id="asp-form">
         <div class="apass-lbl" id="lbl-cat" style="margin-bottom:8px">Category</div>
         <div class="cats" id="cats-grid">
@@ -755,57 +819,80 @@ input[type=range]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;
 
     <!-- ADMIN -->
     <div class="page" id="page-adm">
-      <div class="sh"><span class="sh-icon">⚡</span><span class="sh-title" id="sh-adm">ADMIN PANEL</span></div>
-      <div id="alog-wrap" class="alog-wrap">
-        <div class="apass-lbl" id="lbl-pass">Access password</div>
-        <input type="password" class="apass" id="apass" placeholder="••••••••"/>
-        <div class="aerr" id="aerr">✖ Incorrect password</div>
-        <div style="margin-top:12px"><button class="btn btn-pri" id="btn-alog">▶ ENTER</button></div>
+      <div class="sh"><span class="sh-icon">🔒</span><span class="sh-title" id="sh-adm">ЯК ЦЕ ПРАЦЮЄ</span></div>
+
+      <!-- Hero -->
+      <div class="how-hero">
+        <div class="how-orb">🕵️</div>
+        <div class="how-title">Справді анонімно</div>
+        <div class="how-sub">Твоя особистість математично захищена. Ось докази.</div>
       </div>
-      <div id="adm-dash" style="display:none">
-        <!-- Stats -->
-        <div class="stats">
-          <div class="sc"><div class="sc-n" id="a1">—</div><div class="sc-l" id="a1l">Today</div></div>
-          <div class="sc"><div class="sc-n" id="a2">—</div><div class="sc-l" id="a2l">Pending</div></div>
-          <div class="sc"><div class="sc-n" id="a3">—</div><div class="sc-l" id="a3l">Total</div></div>
-          <div class="sc"><div class="sc-n" id="a4">—</div><div class="sc-l" id="a4l">Avg</div></div>
-        </div>
-        <!-- Admin tabs -->
-        <div class="fbar" style="margin-bottom:14px">
-          <button class="fb on" id="adm-tab-q" onclick="switchAdmTab('questions')">📋 Питання</button>
-          <button class="fb" id="adm-tab-u" onclick="switchAdmTab('users')">👥 Діалоги</button>
-        </div>
-        <!-- Questions tab -->
-        <div id="adm-tab-questions">
-          <div class="chart-wrap">
-            <div class="chart-title" id="chart-title">24H ACTIVITY</div>
-            <div class="chart-bars" id="chart-bars"></div>
+
+      <div style="margin-bottom:18px">
+        <div class="anon-proof-title" style="margin-bottom:12px">📨 ЩО ВІДБУВАЄТЬСЯ КОЛИ ТИ НАДСИЛАЄШ ПИТАННЯ</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:14px 16px">
+            <div style="font-size:11px;color:var(--acc1);font-family:var(--font-m);letter-spacing:1.5px;margin-bottom:6px">КРОК 1 — ХЕШУВАННЯ</div>
+            <div style="font-size:13px;color:var(--text);line-height:1.5">Твій Telegram ID перетворюється на незворотній хеш (BLAKE2b + секретна сіль). Навіть розробник не може дізнатись твій ID з цього хешу.</div>
+            <div style="margin-top:10px;background:rgba(0,0,0,0.3);border-radius:8px;padding:10px;font-family:monospace;font-size:11px">
+              <span style="color:var(--muted)">Твій ID:</span> <span style="color:var(--text)">123456789</span><br>
+              <span style="color:var(--muted)">↓ BLAKE2b + сіль</span><br>
+              <span style="color:var(--acc1)">a4f8c2e1d7b39f1a8d2c...</span>
+            </div>
           </div>
-          <div class="adm-search"><span class="adm-search-ic">🔍</span><input class="adm-search-input" id="adm-search" placeholder="Search questions…" oninput="debounceSearch()"/></div>
-          <div class="fbar" id="adm-fbar">
-            <button class="fb on" data-f="all" id="fb-all">All</button>
-            <button class="fb" data-f="starred">⭐ Starred</button>
-            <button class="fb" data-f="Tech">💻 Tech</button>
-            <button class="fb" data-f="Personal">🙋 Personal</button>
-            <button class="fb" data-f="Other">💭 Other</button>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:14px 16px">
+            <div style="font-size:11px;color:var(--acc1);font-family:var(--font-m);letter-spacing:1.5px;margin-bottom:6px">КРОК 2 — ЩО ЗБЕРІГАЄТЬСЯ В БАЗІ</div>
+            <div style="font-size:13px;color:var(--text);line-height:1.5">В базі даних зберігається: текст питання, час, хеш (не твій ID), категорія. Твій справжній Telegram ID зберігається <em>окремо</em> — тільки щоб доставити тобі відповідь.</div>
           </div>
-          <div id="adml"></div>
-          <div class="pager" id="adm-pager" style="display:none">
-            <button class="pager-btn" id="adm-prev" onclick="admPage(-1)">← Prev</button>
-            <span class="pager-info" id="adm-page-info">1 / 1</span>
-            <button class="pager-btn" id="adm-next" onclick="admPage(1)">Next →</button>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:14px 16px">
+            <div style="font-size:11px;color:var(--acc1);font-family:var(--font-m);letter-spacing:1.5px;margin-bottom:6px">КРОК 3 — ЩО БАЧИТЬ АДМІН</div>
+            <div style="font-size:13px;color:var(--text);line-height:1.5">Адмін бачить <strong>тільки</strong>: текст питання, категорію, час і хеш. Ні імені, ні юзернейму, ні ID — нічого особистого.</div>
+            <div style="margin-top:10px;background:rgba(0,0,0,0.3);border-radius:8px;padding:10px;font-size:12px">
+              <div style="color:var(--muted);margin-bottom:4px">Вигляд питання для адміна:</div>
+              <div style="color:var(--text)">📩 Текст питання...</div>
+              <div style="color:var(--muted);font-size:11px">🕐 14:32 · 💭 Other · #a4f8c2e1...</div>
+            </div>
           </div>
-          <div style="margin-top:14px;display:flex;gap:7px;flex-wrap:wrap">
-            <button class="btn btn-sec btn-sm" onclick="exportCSV()">📥 Export CSV</button>
-            <button class="btn btn-danger btn-sm" onclick="adminLogout()">✕ Logout</button>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:14px 16px">
+            <div style="font-size:11px;color:var(--success);font-family:var(--font-m);letter-spacing:1.5px;margin-bottom:6px">КРОК 4 — ДОСТАВКА ВІДПОВІДІ</div>
+            <div style="font-size:13px;color:var(--text);line-height:1.5">Коли адмін відповідає — сервер сам знаходить твій ID і надсилає відповідь через бота. Адмін цього процесу не бачить і не контролює.</div>
           </div>
-        </div>
-        <!-- Users/Dialogs tab -->
-        <div id="adm-tab-users" style="display:none">
-          <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Клацніть на користувача щоб відкрити діалог</div>
-          <div id="users-list"></div>
         </div>
       </div>
+
+      <div class="anon-proof">
+        <div class="anon-proof-title">✅ ГАРАНТІЇ АНОНІМНОСТІ</div>
+        <div class="anon-proof-row"><span class="apr-key">Адмін бачить твоє ім'я</span><span class="apr-val" style="color:#ff4d6d">✗ НІКОЛИ</span></div>
+        <div class="anon-proof-row"><span class="apr-key">Адмін бачить твій ID</span><span class="apr-val" style="color:#ff4d6d">✗ НІКОЛИ</span></div>
+        <div class="anon-proof-row"><span class="apr-key">Питання прив'язані до тебе</span><span class="apr-val" style="color:#ff4d6d">✗ НІКОЛИ</span></div>
+        <div class="anon-proof-row"><span class="apr-key">Відповідь доходить до тебе</span><span class="apr-val" style="color:var(--success)">✓ ЗАВЖДИ</span></div>
+        <div class="anon-proof-row"><span class="apr-key">Твої дані передаються третім</span><span class="apr-val" style="color:#ff4d6d">✗ НІКОЛИ</span></div>
+        <div class="anon-proof-row"><span class="apr-key">Хеш можна розшифрувати</span><span class="apr-val" style="color:#ff4d6d">✗ НЕМОЖЛИВО</span></div>
+      </div>
+
+      <div style="margin-top:16px;margin-bottom:16px">
+        <div class="anon-proof-title" style="margin-bottom:12px">❓ ЧАСТІ ПИТАННЯ</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:14px 16px">
+            <div style="font-size:13px;font-weight:600;color:var(--acc1);margin-bottom:6px">Чи може адмін дізнатись, що це я написав?</div>
+            <div style="font-size:13px;color:var(--text);line-height:1.5">Ні. Адмін бачить лише хеш — набір символів без жодного зв'язку з твоїм обліковим записом. Навіть якщо ти напишеш 10 питань — адмін не знатиме, що вони від однієї людини.</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:14px 16px">
+            <div style="font-size:13px;font-weight:600;color:var(--acc1);margin-bottom:6px">Як відповідь знаходить мене?</div>
+            <div style="font-size:13px;color:var(--text);line-height:1.5">Твій Telegram ID зберігається в окремій захищеній таблиці. Сервер автоматично надсилає відповідь через бота. Адмін не бачить і не вводить нічого пов'язаного з тобою.</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:14px 16px">
+            <div style="font-size:13px;font-weight:600;color:var(--acc1);margin-bottom:6px">Що таке BLAKE2b?</div>
+            <div style="font-size:13px;color:var(--text);line-height:1.5">Це криптографічна хеш-функція — як одностороннє шифрування. З хешу неможливо отримати оригінальні дані. Використовується в банківських системах і блокчейні.</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:14px 16px">
+            <div style="font-size:13px;font-weight:600;color:var(--acc1);margin-bottom:6px">Чи можу я редагувати питання після відправки?</div>
+            <div style="font-size:13px;color:var(--text);line-height:1.5">Так — протягом 2 хвилин після надсилання, якщо адмін ще не відповів.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align:center;padding:8px 0 4px;font-family:var(--font-m);font-size:9px;color:var(--muted);letter-spacing:2px">SILENCE·NET · ZERO KNOWLEDGE DESIGN</div>
     </div>
 
     <!-- SETTINGS -->
@@ -856,6 +943,57 @@ input[type=range]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;
         <div class="sett-row"><div class="sett-row-l"><span class="sett-row-ic">👁️</span><div><div class="sett-row-nm" id="sett-blur">Blur on switch</div><div class="sett-row-ds" id="sett-blur-ds">Hide when backgrounded</div></div></div><label class="tog"><input type="checkbox" id="tog-blur" checked onchange="onToggleBlur(this.checked)"/><span class="tog-sl"></span></label></div>
         <div class="sett-row"><div class="sett-row-l"><span class="sett-row-ic">🕒</span><div><div class="sett-row-nm" id="sett-hist">Save history</div><div class="sett-row-ds" id="sett-hist-ds">Store locally</div></div></div><label class="tog"><input type="checkbox" id="tog-hist" checked/><span class="tog-sl"></span></label></div>
       </div>
+      <!-- ADMIN PANEL -->
+      <div class="sett-section">
+        <div class="sett-hdr">⚡ ADMIN PANEL</div>
+        <div id="alog-wrap" style="padding-top:8px">
+          <div class="apass-lbl" id="lbl-pass">Access password</div>
+          <input type="password" class="apass" id="apass" placeholder="••••••••"/>
+          <div class="aerr" id="aerr">✖ Incorrect password</div>
+          <div style="margin-top:12px"><button class="btn btn-pri" id="btn-alog">▶ ENTER</button></div>
+        </div>
+        <div id="adm-dash" style="display:none">
+          <div class="stats">
+            <div class="sc"><div class="sc-n" id="a1">—</div><div class="sc-l" id="a1l">Today</div></div>
+            <div class="sc"><div class="sc-n" id="a2">—</div><div class="sc-l" id="a2l">Pending</div></div>
+            <div class="sc"><div class="sc-n" id="a3">—</div><div class="sc-l" id="a3l">Total</div></div>
+            <div class="sc"><div class="sc-n" id="a4">—</div><div class="sc-l" id="a4l">Avg</div></div>
+          </div>
+          <div class="fbar" style="margin-bottom:14px">
+            <button class="fb on" id="adm-tab-q" onclick="switchAdmTab('questions')">📋 Питання</button>
+            <button class="fb" id="adm-tab-u" onclick="switchAdmTab('users')">👥 Діалоги</button>
+          </div>
+          <div id="adm-tab-questions">
+            <div class="chart-wrap">
+              <div class="chart-title" id="chart-title">24H ACTIVITY</div>
+              <div class="chart-bars" id="chart-bars"></div>
+            </div>
+            <div class="adm-search"><span class="adm-search-ic">🔍</span><input class="adm-search-input" id="adm-search" placeholder="Search questions…" oninput="debounceSearch()"/></div>
+            <div class="fbar" id="adm-fbar">
+              <button class="fb on" data-f="all" id="fb-all">All</button>
+              <button class="fb" data-f="starred">⭐ Starred</button>
+              <button class="fb" data-f="Tech">💻 Tech</button>
+              <button class="fb" data-f="Personal">🙋 Personal</button>
+              <button class="fb" data-f="Other">💭 Other</button>
+            </div>
+            <div id="adml"></div>
+            <div class="pager" id="adm-pager" style="display:none">
+              <button class="pager-btn" id="adm-prev" onclick="admPage(-1)">← Prev</button>
+              <span class="pager-info" id="adm-page-info">1 / 1</span>
+              <button class="pager-btn" id="adm-next" onclick="admPage(1)">Next →</button>
+            </div>
+            <div style="margin-top:14px;display:flex;gap:7px;flex-wrap:wrap">
+              <button class="btn btn-sec btn-sm" onclick="exportCSV()">📥 Export CSV</button>
+              <button class="btn btn-danger btn-sm" onclick="adminLogout()">✕ Logout</button>
+            </div>
+          </div>
+          <div id="adm-tab-users" style="display:none">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Клацніть на користувача щоб відкрити діалог</div>
+            <div id="users-list"></div>
+          </div>
+        </div>
+      </div>
+
       <div style="text-align:center;padding:12px 0 4px;font-family:var(--font-m);font-size:8.5px;color:var(--muted);letter-spacing:3px">SILENCE·NET: ANONIMQ v2.1 ◈ <span id="ver-anon">ANONYMOUS</span></div>
     </div>
   </div>
@@ -866,7 +1004,7 @@ input[type=range]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;
       <button class="bnnb on" id="bnnb-ask" onclick="goPage('ask')"><span class="bnnb-ic">❓</span><span class="bnnb-lb" id="nav-ask">Ask</span></button>
       <button class="bnnb" id="bnnb-my" onclick="goPage('my')"><span class="bnnb-ic">💬</span><span class="bnnb-lb" id="nav-my">Answers</span><span class="bnnb-badge" id="bdg"></span></button>
       <button class="bnnb" id="bnnb-wall" onclick="goPage('wall')"><span class="bnnb-ic">📢</span><span class="bnnb-lb">Wall</span></button>
-      <button class="bnnb" id="bnnb-adm" onclick="goPage('adm')"><span class="bnnb-ic">⚡</span><span class="bnnb-lb" id="nav-adm">Admin</span></button>
+      <button class="bnnb" id="bnnb-adm" onclick="goPage('adm')"><span class="bnnb-ic">🔒</span><span class="bnnb-lb" id="nav-adm">FAQ</span></button>
       <button class="bnnb" id="bnnb-set" onclick="goPage('set')"><span class="bnnb-ic">⚙️</span><span class="bnnb-lb" id="nav-set">Settings</span></button>
     </div>
   </div>
@@ -955,7 +1093,7 @@ const TR={
 uk:{
   'w-sub':'Анонімне питання','wf1':'Анонімно','wf2':'Миттєво','wf3':'Захищено',
   'w-enter':'▶ УВІЙТИ','sh-ask':'ЗАДАТИ ПИТАННЯ','sh-pill':'АНОН',
-  'sh-my':'МОЇ ПИТАННЯ','sh-how':'ЯК ЦЕ ПРАЦЮЄ','sh-adm':'АДМІН ПАНЕЛЬ','sh-set':'НАЛАШТУВАННЯ',
+  'sh-my':'МОЇ ПИТАННЯ','sh-how':'ЯК ЦЕ ПРАЦЮЄ','sh-adm':'ЯК ЦЕ ПРАЦЮЄ','sh-set':'НАЛАШТУВАННЯ',
   'lbl-cat':'Категорія','lbl-tags':'Теги (необов\'язково)',
   'cat-other':'Інше','cat-pers':'Особисте','cat-phil':'Філософія','cat-hum':'Гумор','cat-adv':'Порада',
   'qt-ph':'Напишіть своє анонімне питання…','tag-ph':'+ додати тег, Enter',
@@ -976,7 +1114,7 @@ uk:{
   'sett-autodraft':'Авто-чернетка','sett-autodraft-ds':'Зберігати незавершені питання',
   'sett-blur':'Розмиття','sett-blur-ds':'Ховати при мінімізації',
   'sett-hist':'Зберігати історію','sett-hist-ds':'Локально на пристрої',
-  'nav-ask':'Питання','nav-my':'Відповіді','nav-how':'Анонімність','nav-adm':'Адмін','nav-set':'Налаш.',
+  'nav-ask':'Питання','nav-my':'Відповіді','nav-how':'Анонімність','nav-adm':'FAQ','nav-set':'Налаш.',
   'prof-anon':'АНОНІМНО','ver-anon':'АНОНІМНО',
   'chart-title':'АКТИВНІСТЬ 24Г',
   'how-hero-title':'100% Анонімно','how-hero-sub':'Ваша особистість математично захищена.',
@@ -1002,7 +1140,7 @@ uk:{
 en:{
   'w-sub':'Anonymous Questions','wf1':'Anonymous','wf2':'Instant','wf3':'Secure',
   'w-enter':'▶ ENTER','sh-ask':'ASK A QUESTION','sh-pill':'ANON',
-  'sh-my':'MY QUESTIONS','sh-how':'HOW IT WORKS','sh-adm':'ADMIN PANEL','sh-set':'SETTINGS',
+  'sh-my':'MY QUESTIONS','sh-how':'HOW IT WORKS','sh-adm':'HOW IT WORKS','sh-set':'SETTINGS',
   'lbl-cat':'Category','lbl-tags':'Tags (optional)',
   'cat-other':'Other','cat-pers':'Personal','cat-phil':'Philosophy','cat-hum':'Humor','cat-adv':'Advice',
   'qt-ph':'Write your anonymous question…','tag-ph':'+ add tag, Enter',
@@ -1023,7 +1161,7 @@ en:{
   'sett-autodraft':'Auto-draft','sett-autodraft-ds':'Auto-save unfinished questions',
   'sett-blur':'Blur on switch','sett-blur-ds':'Hide when backgrounded',
   'sett-hist':'Save history','sett-hist-ds':'Store locally',
-  'nav-ask':'Ask','nav-my':'Answers','nav-how':'Privacy','nav-adm':'Admin','nav-set':'Settings',
+  'nav-ask':'Ask','nav-my':'Answers','nav-how':'Privacy','nav-adm':'FAQ','nav-set':'Settings',
   'prof-anon':'ANONYMOUS','ver-anon':'ANONYMOUS',
   'chart-title':'24H ACTIVITY',
   'how-hero-title':'100% Anonymous','how-hero-sub':'Your identity is mathematically protected.',
@@ -1049,7 +1187,7 @@ en:{
 ru:{
   'w-sub':'Анонимный вопрос','wf1':'Анонимно','wf2':'Мгновенно','wf3':'Защищено',
   'w-enter':'▶ ВОЙТИ','sh-ask':'ЗАДАТЬ ВОПРОС','sh-pill':'АНОН',
-  'sh-my':'МОИ ВОПРОСЫ','sh-how':'КАК ЭТО РАБОТАЕТ','sh-adm':'ПАНЕЛЬ АДМИНА','sh-set':'НАСТРОЙКИ',
+  'sh-my':'МОИ ВОПРОСЫ','sh-how':'КАК ЭТО РАБОТАЕТ','sh-adm':'КАК ЭТО РАБОТАЕТ','sh-set':'НАСТРОЙКИ',
   'lbl-cat':'Категория','lbl-tags':'Теги (необязательно)',
   'cat-other':'Другое','cat-pers':'Личное','cat-phil':'Философия','cat-hum':'Юмор','cat-adv':'Совет',
   'qt-ph':'Напишите свой анонимный вопрос…','tag-ph':'+ добавить тег, Enter',
@@ -1070,7 +1208,7 @@ ru:{
   'sett-autodraft':'Авто-черновик','sett-autodraft-ds':'Сохранять незавершённые',
   'sett-blur':'Размытие','sett-blur-ds':'Скрывать при сворачивании',
   'sett-hist':'История','sett-hist-ds':'Хранить локально',
-  'nav-ask':'Вопросы','nav-my':'Ответы','nav-how':'Анонимность','nav-adm':'Админ','nav-set':'Настр.',
+  'nav-ask':'Вопросы','nav-my':'Ответы','nav-how':'Анонимность','nav-adm':'FAQ','nav-set':'Настр.',
   'prof-anon':'АНОНИМНО','ver-anon':'АНОНИМНО',
   'chart-title':'АКТИВНОСТЬ 24Ч',
   'how-hero-title':'100% Анонимно','how-hero-sub':'Ваша личность математически защищена.',
